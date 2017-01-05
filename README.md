@@ -1,5 +1,23 @@
 # AlloSystem Examples
 
+...a separate repo for all the examples of AlloSystem.
+
+|Status|Task|
+|------|:---|
+| DONE | Create this repository |
+| DONE | Copy all examples from AlloSystem and MAT201B |
+| DONE | Format all code to meet google standards |
+| DONE | Move all media files (e.g., wav, jpg, obj, bin) to LFS |
+|      | Make sure each example builds |
+|      | Make sure each example works correctly |
+|      | Add the correct license to this repo |
+|      | Normalize header/provenance infomation in each file |
+|      | Use doxygen to improve examples |
+|      | Add "tags" (e.g., 2D, spatialization, lighting) to headers |
+|      | ? |
+
+## Status
+
 |Works|File|
 |-----|:---|
 |     |alloutil/cubemap.cpp|
@@ -99,7 +117,6 @@
 |     |handouts/examples/use_pick_ray.cpp|
 |     |handouts/examples/why_on_animate_exists/the_right_way.cpp|
 |     |handouts/examples/why_on_animate_exists/the_wrong_way.cpp|
-|     |handouts/git-howto.md|
 |     |handouts/granular/granular_00.cpp|
 |     |handouts/granular/granular_01.cpp|
 |     |handouts/granular/granular_02.cpp|
@@ -132,19 +149,6 @@
 |     |handouts/hw4/steps/11_make_renderer_receive_more.cpp|
 |     |handouts/hw4/steps/12_make_renderer_for_allosphere.cpp|
 |     |handouts/hw4/steps/13_make_simulator_complete.cpp|
-|     |handouts/media/Avenir-Medium.otf|
-|     |handouts/media/bat_milkshake.png|
-|     |handouts/media/butterfly_wing_half.png|
-|     |handouts/media/cat_house_synth.jpeg|
-|     |handouts/media/cloud_panorama.jpg|
-|     |handouts/media/gibber_chimes.wav|
-|     |handouts/media/heart_beat.wav|
-|     |handouts/media/matt.wav|
-|     |handouts/media/micro.png|
-|     |handouts/media/pluto.png|
-|     |handouts/media/sabaka.jpeg|
-|     |handouts/media/surround.jpg|
-|     |handouts/media/worthersee_klagenfurt.jpg|
 |     |handouts/shaders/basic.vert|
 |     |handouts/shaders/color.frag|
 |     |handouts/shaders/tweets.frag|
@@ -202,7 +206,6 @@
 |     |io/socket.cpp|
 |     |io/window.cpp|
 |     |io/zeroconf.cpp|
-|     |manifest|
 |     |math/matrix.cpp|
 |     |math/random.cpp|
 |     |math/vector.cpp|
@@ -222,27 +225,6 @@
 |     |raycaster/rayApp_shaderFromString.cpp|
 |     |raycaster/toroid.frag|
 |     |raycaster/toroid.vert|
-|     |README.md|
-|     |share/fonts/VeraMoBd.ttf|
-|     |share/fonts/VeraMoBI.ttf|
-|     |share/fonts/VeraMoIt.ttf|
-|     |share/fonts/VeraMono.ttf|
-|     |share/images/hubble.jpg|
-|     |share/images/tiny.jpg|
-|     |share/imod_data/golgi.mrc|
-|     |share/imod_data/README|
-|     |share/models/bunny_small.obj|
-|     |share/models/ducky.obj|
-|     |share/shaders/basicFragment.glsl|
-|     |share/shaders/basicVertex.glsl|
-|     |share/shaders/cel.fs|
-|     |share/shaders/cel.vs|
-|     |share/shaders/celshader.sbproj|
-|     |share/shaders/omni.sbproj|
-|     |share/shaders/omniFragment.glsl.fs|
-|     |share/shaders/omniVertex.glsl.vs|
-|     |share/shaders/stereoFragment.glsl|
-|     |share/shaders/stereoVertex.glsl|
 |     |simulation/flocking.cpp|
 |     |simulation/gravityWell.cpp|
 |     |simulation/levyFlight.cpp|
