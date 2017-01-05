@@ -12,8 +12,8 @@
 //   wins. See "the wrong way".
 //
 
-#include "allocore/io/al_App.hpp"
 #include "allocore/graphics/al_Font.hpp"
+#include "allocore/io/al_App.hpp"
 #include "allocore/io/al_File.hpp"
 using namespace al;
 using namespace std;

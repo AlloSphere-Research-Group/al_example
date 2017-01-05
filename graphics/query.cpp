@@ -6,13 +6,11 @@
 */
 
 #include <iostream>
-#include "allocore/io/al_Window.hpp"
 #include "allocore/graphics/al_Graphics.hpp"
+#include "allocore/io/al_Window.hpp"
 
 struct Foo : al::Window {
-
   virtual bool onCreate() {
-
     // We know there's a valid OpenGL context now
     //
     GLint bits;
@@ -38,6 +36,6 @@ struct Foo : al::Window {
 
 int main(int argc, char* argv[]) {
   Foo foo;
-	foo.create();
+  foo.create();
   return 0;
 }

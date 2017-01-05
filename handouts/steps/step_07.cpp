@@ -27,7 +27,7 @@ struct AlloApp : App {
   virtual void onDraw(Graphics& g, const Viewpoint& v) {
     // this would move the light with the nav()
     //
-    //light.pos(nav().pos());
+    // light.pos(nav().pos());
 
     // this would print out the nav() position on every frame
     //
@@ -42,4 +42,3 @@ int main(int argc, char* argv[]) {
   app.start();
   return 0;
 }
-

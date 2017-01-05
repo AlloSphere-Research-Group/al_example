@@ -4,8 +4,8 @@
 //
 // Shows how to visualize the amplitude envelope of a beating heart
 //
-#include "allocore/io/al_App.hpp"
 #include "Gamma/SamplePlayer.h"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;
@@ -31,7 +31,7 @@ struct MyApp : App {
   }
 
   virtual void onDraw(Graphics& g) {
-    float x = rnd::uniformS(); // [-1, 1)
+    float x = rnd::uniformS();  // [-1, 1)
     float y = rnd::uniformS();
 
     g.translate(Vec3f(x, y, 0) * visualLoudnessMeasure);

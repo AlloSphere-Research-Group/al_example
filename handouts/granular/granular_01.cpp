@@ -10,9 +10,9 @@
 // any single grain with keypresses.
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Gamma.h"
 #include "Gamma/SamplePlayer.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 
@@ -20,7 +20,7 @@ using namespace std;
 
 struct AlloApp : App {
   gam::SamplePlayer<> samplePlayer;
-  gam::SamplePlayer<> grainPlayer[NUM_GRAINS]; // XXX now an array
+  gam::SamplePlayer<> grainPlayer[NUM_GRAINS];  // XXX now an array
 
   AlloApp() {
     SearchPaths searchPaths;

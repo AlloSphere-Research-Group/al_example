@@ -2,7 +2,7 @@
 Allocore Example: PickableTranslateHandle
 
 Description:
-This example shows how to add a rotation handle as a child 
+This example shows how to add a rotation handle as a child
 to interact with its parent pickable
 
 Author:
@@ -11,20 +11,19 @@ Tim Wood, April 2016
 
 #include "allocore/io/al_App.hpp"
 #include "allocore/ui/al_Pickable.hpp"
-#include "allocore/ui/al_TranslateHandle.hpp"
 #include "allocore/ui/al_RotateHandle.hpp"
+#include "allocore/ui/al_TranslateHandle.hpp"
 
 using namespace al;
 
 class MyApp : public App {
-public:
-
+ public:
   bool loadedFont;
   double t;
-  Light light;      
-  Material material; 
-  
-  Mesh mesh; 
+  Light light;
+  Material material;
+
+  Mesh mesh;
 
   Pickable pickable;
   TranslateHandle th;
@@ -32,14 +31,14 @@ public:
 
   Font font;
 
-  MyApp(){
-
+  MyApp() {
     // try to load font
     loadedFont = font.load("allocore/share/fonts/VeraMono.ttf", 72);
-    if(!loadedFont) std::cout << "Failed to load font. Not rendering labels.." << std::endl;
+    if (!loadedFont)
+      std::cout << "Failed to load font. Not rendering labels.." << std::endl;
 
     // position camera, disable mouse to look
-    nav().pos(0,0,10);
+    nav().pos(0, 0, 10);
     navControl().useMouse(false);
 
     // Create a torus mesh
@@ -48,7 +47,7 @@ public:
 
     // Initialize Pickable
     pickable.set(mesh);
-    
+
     // add translate handle as child
     pickable.addChild(rh);
     pickable.addChild(th);
@@ -57,27 +56,26 @@ public:
     initWindow();
   }
 
-  void onAnimate(double dt){
+  void onAnimate(double dt) {
     // move light in a circle
     t += dt;
-    light.pos(10*cos(t),0,10*sin(t));
+    light.pos(10 * cos(t), 0, 10 * sin(t));
   }
 
-  void onDraw(Graphics& g){
-
+  void onDraw(Graphics& g) {
     // draw lit mesh
     g.lighting(true);
     light();
     material();
-    g.color(1,1,1);
+    g.color(1, 1, 1);
     pickable.drawMesh(g);
-    
+
     g.lighting(false);
     pickable.drawBB(g);
 
-    if(loadedFont){
+    if (loadedFont) {
       g.blendAdd();
-      g.color(1,1,1);
+      g.color(1, 1, 1);
       pickable.drawLabels(g, font, nav());
       g.blendOff();
     }
@@ -87,25 +85,23 @@ public:
     g.depthTesting(true);
   }
 
-  virtual void onMouseMove(const ViewpointWindow& w, const Mouse& m){
+  virtual void onMouseMove(const ViewpointWindow& w, const Mouse& m) {
     // make a ray from mouse location
     Rayd r = getPickRay(w, m.x(), m.y());
     pickable.point(r);
   }
-  virtual void onMouseDown(const ViewpointWindow& w, const Mouse& m){
+  virtual void onMouseDown(const ViewpointWindow& w, const Mouse& m) {
     Rayd r = getPickRay(w, m.x(), m.y());
     pickable.pick(r);
   }
-  virtual void onMouseDrag(const ViewpointWindow& w, const Mouse& m){
+  virtual void onMouseDrag(const ViewpointWindow& w, const Mouse& m) {
     Rayd r = getPickRay(w, m.x(), m.y());
     pickable.drag(r);
   }
-  virtual void onMouseUp(const ViewpointWindow& w, const Mouse& m){
+  virtual void onMouseUp(const ViewpointWindow& w, const Mouse& m) {
     Rayd r = getPickRay(w, m.x(), m.y());
     pickable.unpick(r);
   }
 };
 
-int main(){
-  MyApp().start();
-}
+int main() { MyApp().start(); }

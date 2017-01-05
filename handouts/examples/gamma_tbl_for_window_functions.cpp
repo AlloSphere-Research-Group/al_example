@@ -7,10 +7,10 @@
 // - Draw a Mesh with the LINE_STRIP primitive
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
 #include "Gamma/SamplePlayer.h"
 #include "Gamma/tbl.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 using namespace gam;

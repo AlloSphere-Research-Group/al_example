@@ -2,8 +2,8 @@
 // Original authors: Karl Yerkes and Matt Wright (2012)
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

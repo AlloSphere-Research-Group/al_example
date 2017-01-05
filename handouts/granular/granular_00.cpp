@@ -10,9 +10,9 @@
 // with keypresses.
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Gamma.h"
 #include "Gamma/SamplePlayer.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 
@@ -29,9 +29,9 @@ struct AlloApp : App {
     searchPaths.print();
 
     // Choose a sound...
-    const char *soundFileName = "matt.wav";
+    const char* soundFileName = "matt.wav";
     // const char *soundFileName = "SoundDemo.wav";
-    //const char* soundFileName = "kauaiOo.wav";
+    // const char* soundFileName = "kauaiOo.wav";
 
     string soundFilePath = searchPaths.find(soundFileName).filepath();
     if (soundFilePath == "") {

@@ -11,63 +11,70 @@ Lance Putnam, May 2011
 #include "allocore/io/al_App.hpp"
 using namespace al;
 
-class MyApp : public App{
-public:
+class MyApp : public App {
+ public:
+  static const int N = 16;  // grid resolution
+  ShaderProgram shader;
+  Texture tex{16, 16, Graphics::LUMINANCE, Graphics::FLOAT};
+  Mesh geom;
+  float angle = 0;
 
-	static const int N = 16; // grid resolution
-	ShaderProgram shader;
-	Texture tex{16,16, Graphics::LUMINANCE, Graphics::FLOAT};
-	Mesh geom;
-	float angle = 0;
+  MyApp() {
+    // Create sprite positions
+    geom.primitive(Graphics::POINTS);
+    for (int k = 0; k < N; ++k) {
+      float z = float(k) / (N - 1) * 2 - 1;
+      for (int j = 0; j < N; ++j) {
+        float y = float(j) / (N - 1) * 2 - 1;
+        for (int i = 0; i < N; ++i) {
+          float x = float(i) / (N - 1) * 2 - 1;
+          geom.vertex(x, y, z);
+          geom.color(x * 0.1 + 0.1, y * 0.1 + 0.1, z * 0.1 + 0.1);
+        }
+      }
+    }
 
-	MyApp(){
+    // Create sprite texture
+    int Nx = tex.width();
+    int Ny = tex.height();
+    float* pix = tex.data<float>();
 
-		// Create sprite positions
-		geom.primitive(Graphics::POINTS);
-		for(int k=0; k<N; ++k){ float z = float(k)/(N-1)*2-1;
-		for(int j=0; j<N; ++j){ float y = float(j)/(N-1)*2-1;
-		for(int i=0; i<N; ++i){ float x = float(i)/(N-1)*2-1;
-			geom.vertex(x,y,z);
-			geom.color(x*0.1+0.1, y*0.1+0.1, z*0.1+0.1);
-		}}}
+    for (int j = 0; j < Ny; ++j) {
+      float y = float(j) / (Ny - 1) * 2 - 1;
+      for (int i = 0; i < Nx; ++i) {
+        float x = float(i) / (Nx - 1) * 2 - 1;
+        float m = 1 - al::clip(x * x + y * y);
+        pix[j * Nx + i] = m;  // spherical looking
+                              // pix[j*Nx + i] = m*m; // Gaussian-like
+        // pix[j*Nx + i] = pow(2, 1.-1./m); // bright bump
+      }
+    }
 
-		// Create sprite texture
-		int Nx = tex.width();
-		int Ny = tex.height();
-		float * pix = tex.data<float>();
+    nav().pullBack(6);
+    initWindow();
+  }
 
-		for(int j=0; j<Ny; ++j){ float y = float(j)/(Ny-1)*2-1;
-		for(int i=0; i<Nx; ++i){ float x = float(i)/(Nx-1)*2-1;
-			float m = 1-al::clip(x*x + y*y);
-			pix[j*Nx + i] = m; // spherical looking
-			//pix[j*Nx + i] = m*m; // Gaussian-like
-			//pix[j*Nx + i] = pow(2, 1.-1./m); // bright bump
-		}}
+  void onCreate(const ViewpointWindow& w) {
+    // Geometry inputs/outputs must be specified BEFORE compiling shader
+    shader.setGeometryInputPrimitive(Graphics::POINTS);
+    shader.setGeometryOutputPrimitive(Graphics::TRIANGLE_STRIP);
+    shader.setGeometryOutputVertices(4);
 
-		nav().pullBack(6);
-		initWindow();
-	}
-
-	void onCreate(const ViewpointWindow& w){
-
-		// Geometry inputs/outputs must be specified BEFORE compiling shader
-		shader.setGeometryInputPrimitive(Graphics::POINTS);
-		shader.setGeometryOutputPrimitive(Graphics::TRIANGLE_STRIP);
-		shader.setGeometryOutputVertices(4);
-
-		// Compile vertex, fragment, and geometry shaders
-		shader.compile(
-		R"(
+    // Compile vertex, fragment, and geometry shaders
+    shader.compile(
+        R"(
 			void main(){
 				gl_FrontColor = gl_Color;
 				gl_Position = gl_Vertex;
 			}
-		)", R"(
+		)",
+        R"(
 			uniform sampler2D texSampler0;
 			void main(){
 				gl_FragColor = texture2D(texSampler0, gl_TexCoord[0].xy) * gl_Color;
 			}
-		)", R"(
+		)",
+        R"(
 			#version 120
 			#extension GL_EXT_geometry_shader4 : enable
 
@@ -115,31 +122,24 @@ public:
 				//EndPrimitive();
 				gl_Position = gl_PositionIn[0];
 			}
-		)"
-		);
-	}
+		)");
+  }
 
-	void onAnimate(double dt){
-		angle += dt*8;
-	}
+  void onAnimate(double dt) { angle += dt * 8; }
 
-	void onDraw(Graphics& g){
+  void onDraw(Graphics& g) {
+    g.blendAdd();
 
-		g.blendAdd();
-
-		shader.begin();
-		tex.bind();
-			shader.uniform("spriteRadius", 1./N);
-			g.pushMatrix();
-			g.rotate(angle, 0,1,0);
-			g.draw(geom);
-			g.popMatrix();
-		tex.unbind();
-		shader.end();
-	}
+    shader.begin();
+    tex.bind();
+    shader.uniform("spriteRadius", 1. / N);
+    g.pushMatrix();
+    g.rotate(angle, 0, 1, 0);
+    g.draw(geom);
+    g.popMatrix();
+    tex.unbind();
+    shader.end();
+  }
 };
 
-int main(){
-	MyApp().start();
-}
-
+int main() { MyApp().start(); }

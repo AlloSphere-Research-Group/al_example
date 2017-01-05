@@ -98,7 +98,6 @@ std::string omniFS = R"(
 	}
 )";
 
-
 using namespace al;
 
 static Graphics gl;
@@ -109,204 +108,229 @@ Nav nav;
 bool useShader = false;
 
 /*
-	Omnigraphic mode splits up the window into vertical slices (viewports)
-	Each viewport has a slightly rotated view of the scene, such that the
-	borders match up and create a seamless panoramic view.
-	In effect, it presents a cylindrical map.
-	With stereographics, it creates omnistereo (where stereoscopy is continuous
-	around the cylinder)
+        Omnigraphic mode splits up the window into vertical slices (viewports)
+        Each viewport has a slightly rotated view of the scene, such that the
+        borders match up and create a seamless panoramic view.
+        In effect, it presents a cylindrical map.
+        With stereographics, it creates omnistereo (where stereoscopy is
+   continuous
+        around the cylinder)
 
-	However it can be expensive, as each slice is a full scene render.
+        However it can be expensive, as each slice is a full scene render.
 
-	Perhaps a similar effect can be achieved with a shader?:
+        Perhaps a similar effect can be achieved with a shader?:
 
-		According to the polar angle of a vertex, displace it with a modified
-		version of the ModelViewProjection matrix (instead of e.g. fttransform())
+                According to the polar angle of a vertex, displace it with a
+   modified
+                version of the ModelViewProjection matrix (instead of e.g.
+   fttransform())
 
-		The modelview/projection matrices can be calculated in the same way as
-		the Stereographic class (perspectiveLeft/Right, lookatLeft/Right)
+                The modelview/projection matrices can be calculated in the same
+   way as
+                the Stereographic class (perspectiveLeft/Right,
+   lookatLeft/Right)
 
-	The advantage would be full spherical omnistereo, and hopefully cheaper.
+        The advantage would be full spherical omnistereo, and hopefully cheaper.
 */
 
-struct MyWindow : Window, public Drawable{
+struct MyWindow : Window, public Drawable {
+  bool onKeyDown(const Keyboard& k) {
+    switch (k.key()) {
+      case 'o':
+        stereo.omni(!stereo.omni());
+        return false;
+      case 's':
+        useShader = !useShader;
+        return false;
+      case Keyboard::TAB:
+        stereo.stereo(!stereo.stereo());
+        return false;
+      case '1':
+        stereo.mode(Stereographic::ANAGLYPH);
+        return false;
+      case '2':
+        stereo.mode(Stereographic::ACTIVE);
+        return false;
+      case '3':
+        stereo.mode(Stereographic::DUAL);
+        return false;
+      case '4':
+        stereo.mode(Stereographic::LEFT_EYE);
+        return false;
+      case '5':
+        stereo.mode(Stereographic::RIGHT_EYE);
+        return false;
+      default:
+        return true;
+    }
+  }
 
-	bool onKeyDown(const Keyboard& k){
+  bool onCreate() {
+    Shader omniV(omniVS, Shader::VERTEX);
+    Shader omniF(omniFS, Shader::FRAGMENT);
+    omniV.compile();
+    omniF.compile();
+    omniP.attach(omniV).attach(omniF).link();
 
-		switch(k.key()){
-			case 'o': stereo.omni(!stereo.omni()); return false;
-			case 's': useShader = !useShader; return false;
-			case Keyboard::TAB: stereo.stereo(!stereo.stereo()); return false;
-			case '1': stereo.mode(Stereographic::ANAGLYPH); return false;
-			case '2': stereo.mode(Stereographic::ACTIVE); return false;
-			case '3': stereo.mode(Stereographic::DUAL); return false;
-			case '4': stereo.mode(Stereographic::LEFT_EYE); return false;
-			case '5': stereo.mode(Stereographic::RIGHT_EYE); return false;
-			default: return true;
-		}
-	}
+    omniV.printLog();
+    omniF.printLog();
+    omniP.printLog();
 
-	bool onCreate(){
-		Shader omniV(omniVS, Shader::VERTEX);
-		Shader omniF(omniFS, Shader::FRAGMENT);
-		omniV.compile();
-		omniF.compile();
-		omniP.attach(omniV).attach(omniF).link();
+    stereo.clearColor(Color(1, 1, 1, 1));
+    return true;
+  }
 
-		omniV.printLog();
-		omniF.printLog();
-		omniP.printLog();
+  bool onFrame() {
+    nav.step();
+    if (useShader) {
+      if (stereo.stereo()) {
+        Viewport vp(width(), height());
+        gl.viewport(vp);
+        gl.clearColor(stereo.clearColor());
+        gl.depthMask(1);
+        gl.clear(Graphics::COLOR_BUFFER_BIT | Graphics::DEPTH_BUFFER_BIT);
+        gl.depthTesting(1);
+        gl.modelView(Matrix4d::lookAt(nav.ux(), nav.uy(), nav.uz(), nav.pos()));
 
-		stereo.clearColor(Color(1, 1, 1, 1));
-		return true;
-	}
+        glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
 
-	bool onFrame(){
-		nav.step();
-		if (useShader) {
-			if (stereo.stereo()) {
+        omniP.begin();
+        omniP.uniform("fovy", lens.fovy());
+        omniP.uniform("omniFov", stereo.omniFov());
+        omniP.uniform("aspect", vp.aspect());
+        omniP.uniform("near", lens.near());
+        omniP.uniform("far", lens.far());
+        omniP.uniform("focal", lens.focalLength());
+        omniP.uniform("omni", stereo.omni());
+        omniP.uniform("eyeSep", lens.eyeSep());
+        gl.draw(grid);
+        gl.draw(mesh);
+        omniP.end();
 
-				Viewport vp(width(), height());
-				gl.viewport(vp);
-				gl.clearColor(stereo.clearColor());
-				gl.depthMask(1);
-				gl.clear(Graphics::COLOR_BUFFER_BIT | Graphics::DEPTH_BUFFER_BIT);
-				gl.depthTesting(1);
-				gl.modelView(Matrix4d::lookAt(nav.ux(), nav.uy(), nav.uz(), nav.pos()));
+        glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
+        gl.clear(Graphics::DEPTH_BUFFER_BIT);
 
-				glColorMask(GL_TRUE, GL_FALSE,GL_FALSE,GL_TRUE);
+        omniP.begin();
+        omniP.uniform("fovy", lens.fovy());
+        omniP.uniform("omniFov", stereo.omniFov());
+        omniP.uniform("aspect", vp.aspect());
+        omniP.uniform("near", lens.near());
+        omniP.uniform("far", lens.far());
+        omniP.uniform("focal", lens.focalLength());
+        omniP.uniform("omni", stereo.omni());
+        omniP.uniform("eyeSep", -lens.eyeSep());
+        gl.draw(grid);
+        gl.draw(mesh);
+        omniP.end();
 
-				omniP.begin();
-				omniP.uniform("fovy", lens.fovy());
-				omniP.uniform("omniFov", stereo.omniFov());
-				omniP.uniform("aspect", vp.aspect());
-				omniP.uniform("near", lens.near());
-				omniP.uniform("far", lens.far());
-				omniP.uniform("focal", lens.focalLength());
-				omniP.uniform("omni", stereo.omni());
-				omniP.uniform("eyeSep", lens.eyeSep());
-				gl.draw(grid);
-				gl.draw(mesh);
-				omniP.end();
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-				glColorMask(GL_FALSE,GL_TRUE, GL_TRUE, GL_TRUE);
-				gl.clear(Graphics::DEPTH_BUFFER_BIT);
+      } else {
+        // MONO:
 
-				omniP.begin();
-				omniP.uniform("fovy", lens.fovy());
-				omniP.uniform("omniFov", stereo.omniFov());
-				omniP.uniform("aspect", vp.aspect());
-				omniP.uniform("near", lens.near());
-				omniP.uniform("far", lens.far());
-				omniP.uniform("focal", lens.focalLength());
-				omniP.uniform("omni", stereo.omni());
-				omniP.uniform("eyeSep", -lens.eyeSep());
-				gl.draw(grid);
-				gl.draw(mesh);
-				omniP.end();
+        Viewport vp(width(), height());
+        gl.viewport(vp);
+        gl.clearColor(stereo.clearColor());
+        gl.depthMask(1);
+        gl.clear(Graphics::COLOR_BUFFER_BIT | Graphics::DEPTH_BUFFER_BIT);
+        gl.depthTesting(1);
+        gl.modelView(Matrix4d::lookAt(nav.ux(), nav.uy(), nav.uz(), nav.pos()));
 
-				glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+        omniP.begin();
+        omniP.uniform("fovy", lens.fovy());
+        omniP.uniform("omniFov", stereo.omniFov());
+        omniP.uniform("aspect", vp.aspect());
+        omniP.uniform("near", lens.near());
+        omniP.uniform("far", lens.far());
+        omniP.uniform("focal", lens.focalLength());
+        omniP.uniform("omni", stereo.omni());
+        omniP.uniform("eyeSep", 0.);
+        gl.draw(grid);
+        gl.draw(mesh);
+        omniP.end();
+      }
 
-			} else {
-				// MONO:
+    } else {
+      stereo.draw(gl, lens, nav, Viewport(width(), height()), *this);
+    }
+    return true;
+  }
 
-				Viewport vp(width(), height());
-				gl.viewport(vp);
-				gl.clearColor(stereo.clearColor());
-				gl.depthMask(1);
-				gl.clear(Graphics::COLOR_BUFFER_BIT | Graphics::DEPTH_BUFFER_BIT);
-				gl.depthTesting(1);
-				gl.modelView(Matrix4d::lookAt(nav.ux(), nav.uy(), nav.uz(), nav.pos()));
+  void onDraw(Graphics& gl) {
+    gl.fog(lens.far(), lens.far() / 2, stereo.clearColor());
+    gl.depthTesting(1);
+    gl.draw(grid);
+    gl.draw(mesh);
+  }
 
-				omniP.begin();
-				omniP.uniform("fovy", lens.fovy());
-				omniP.uniform("omniFov", stereo.omniFov());
-				omniP.uniform("aspect", vp.aspect());
-				omniP.uniform("near", lens.near());
-				omniP.uniform("far", lens.far());
-				omniP.uniform("focal", lens.focalLength());
-				omniP.uniform("omni", stereo.omni());
-				omniP.uniform("eyeSep", 0.);
-				gl.draw(grid);
-				gl.draw(mesh);
-				omniP.end();
-			}
-
-		} else {
-			stereo.draw(gl, lens, nav, Viewport(width(), height()), *this);
-		}
-		return true;
-	}
-
-	void onDraw(Graphics& gl){
-		gl.fog(lens.far(), lens.far()/2, stereo.clearColor());
-		gl.depthTesting(1);
-		gl.draw(grid);
-		gl.draw(mesh);
-	}
-
-	ShaderProgram omniP;
+  ShaderProgram omniP;
 };
 
 MyWindow win;
 
-int main(){
+int main() {
+  nav.smooth(0.8);
+  nav.pos(0, 0, -20);
 
-	nav.smooth(0.8);
-	nav.pos(0, 0, -20);
+  lens.near(1).far(100).focalLength(1).fovy(45);
+  lens.eyeSep(-lens.eyeSepAuto());
+  stereo.omni(true, 24, 120);
+  stereo.stereo(false);
+  stereo.mode(Stereographic::ANAGLYPH);
 
-	lens.near(1).far(100).focalLength(1).fovy(45);
-	lens.eyeSep(-lens.eyeSepAuto());
-	stereo.omni(true, 24, 120);
-	stereo.stereo(false);
-	stereo.mode(Stereographic::ANAGLYPH);
+  // set up mesh:
+  mesh.primitive(Graphics::TRIANGLES);
+  double tri_size = 2;
+  double world_radius = 50;
+  int count = 4000;
+  for (int i = 0; i < count; i++) {
+    double x = rnd::uniformS(world_radius);
+    double y = rnd::uniformS(world_radius);
+    double z = rnd::uniformS(world_radius);
+    for (int v = 0; v < 3; v++) {
+      mesh.color(HSV(float(i) / count, v != 2, 1));
+      mesh.vertex(x + rnd::uniformS(tri_size), y + rnd::uniformS(tri_size),
+                  z + rnd::uniformS(tri_size));
+    }
+  }
 
-	// set up mesh:
-	mesh.primitive(Graphics::TRIANGLES);
-	double tri_size = 2;
-	double world_radius = 50;
-	int count = 4000;
-	for (int i=0; i<count; i++) {
-		double x = rnd::uniformS(world_radius);
-		double y = rnd::uniformS(world_radius);
-		double z = rnd::uniformS(world_radius);
-		for (int v=0; v<3; v++) {
-			mesh.color(HSV(float(i)/count, v!=2, 1));
-			mesh.vertex(x+rnd::uniformS(tri_size), y+rnd::uniformS(tri_size), z+rnd::uniformS(tri_size));
-		}
-	}
+  grid.primitive(Graphics::LINES);
+  grid.color(0, 0, 0);
+  double stepsize = 1. / 2;
+  double tsize = 0.1;
+  for (double x = -1; x <= 1; x += stepsize) {
+    for (double y = -1; y <= 1; y += stepsize) {
+      for (double t = -1; t < 1; t += tsize) {
+        grid.vertex(x, y, t);
+        grid.vertex(x, y, t + tsize);
+      }
+    }
+  }
+  for (double x = -1; x <= 1; x += stepsize) {
+    for (double z = -1; z <= 1; z += stepsize) {
+      for (double t = -1; t < 1; t += tsize) {
+        grid.vertex(x, t, z);
+        grid.vertex(x, t + tsize, z);
+      }
+    }
+  }
+  for (double y = -1; y <= 1; y += stepsize) {
+    for (double z = -1; z <= 1; z += stepsize) {
+      for (double t = -1; t < 1; t += tsize) {
+        grid.vertex(t, y, z);
+        grid.vertex(t + tsize, y, z);
+      }
+    }
+  }
+  grid.scale(world_radius);
 
-	grid.primitive(Graphics::LINES);
-	grid.color(0, 0, 0);
-	double stepsize = 1./2;
-	double tsize = 0.1;
-	for (double x=-1; x<=1; x+= stepsize) {
-	for (double y=-1; y<=1; y+= stepsize) {
-	for (double t=-1; t<1; t+= tsize) {
-		grid.vertex(x, y, t);
-		grid.vertex(x, y, t+tsize);
-	}}}
-	for (double x=-1; x<=1; x+= stepsize) {
-	for (double z=-1; z<=1; z+= stepsize) {
-	for (double t=-1; t<1; t+= tsize) {
-		grid.vertex(x, t, z);
-		grid.vertex(x, t+tsize, z);
-	}}}
-	for (double y=-1; y<=1; y+= stepsize) {
-	for (double z=-1; z<=1; z+= stepsize) {
-	for (double t=-1; t<1; t+= tsize) {
-		grid.vertex(t, y, z);
-		grid.vertex(t+tsize, y, z);
-	}}}
-	grid.scale(world_radius);
+  win.create(Window::Dim(100, 0, 640, 480), "Omnigraphic Example", 60);
 
-	win.create(Window::Dim(100, 0, 640, 480), "Omnigraphic Example", 60);
+  win.displayMode(win.displayMode() | Window::STEREO_BUF);
 
-	win.displayMode(win.displayMode() | Window::STEREO_BUF);
+  win.append(*new StandardWindowKeyControls);
+  win.append(*new NavInputControl(nav));
 
-	win.append(*new StandardWindowKeyControls);
-	win.append(*new NavInputControl(nav));
-
-	MainLoop::start();
-    return 0;
+  MainLoop::start();
+  return 0;
 }

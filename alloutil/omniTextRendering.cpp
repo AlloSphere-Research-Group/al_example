@@ -1,6 +1,6 @@
-#include "alloutil/al_OmniApp.hpp"
-#include "allocore/graphics/al_Font.hpp"
 #include <iostream>
+#include "allocore/graphics/al_Font.hpp"
+#include "alloutil/al_OmniApp.hpp"
 
 using namespace al;
 using namespace std;
@@ -39,38 +39,33 @@ struct MyApp : OmniApp {
     glEnable(GL_ALPHA_TEST);
     shader().uniform("texture", 1.0);
 
-    for (int i = 0; i < mesh.vertices().size(); i++){
+    for (int i = 0; i < mesh.vertices().size(); i++) {
       g.pushMatrix();
-        Vec3d xform = mesh.vertices()[i];
-        g.translate(xform);
-        g.scale(.001);
+      Vec3d xform = mesh.vertices()[i];
+      g.translate(xform);
+      g.scale(.001);
 
-        // getLookRotation takes a normalized vector from source to destination
-        // and an up vector, in this case we want the camera's up vector
-        Vec3d forward = Vec3d(pose.pos() - xform).normalize();
-        Quatd rot = Quatd::getBillboardRotation(forward, pose.uu());
-        g.rotate(rot);
+      // getLookRotation takes a normalized vector from source to destination
+      // and an up vector, in this case we want the camera's up vector
+      Vec3d forward = Vec3d(pose.pos() - xform).normalize();
+      Quatd rot = Quatd::getBillboardRotation(forward, pose.uu());
+      g.rotate(rot);
 
-        // render the text
-        stringstream sstream;
-        sstream << float(i);
-        string temp_str = sstream.str();
-        const char* text = temp_str.c_str();
-        font->render(g, text);
+      // render the text
+      stringstream sstream;
+      sstream << float(i);
+      string temp_str = sstream.str();
+      const char* text = temp_str.c_str();
+      font->render(g, text);
       g.popMatrix();
     }
     glDisable(GL_ALPHA_TEST);
     shader().uniform("texture", 0.0);
   }
 
-  virtual void onAnimate(al_sec dt) {
-    pose = nav();
-  }
+  virtual void onAnimate(al_sec dt) { pose = nav(); }
 
-
-  virtual void onMessage(osc::Message& m) {
-    OmniApp::onMessage(m);
-  }
+  virtual void onMessage(osc::Message& m) { OmniApp::onMessage(m); }
 
   virtual bool onKeyDown(const Keyboard& k) { return true; }
 

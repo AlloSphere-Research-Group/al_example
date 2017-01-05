@@ -2,7 +2,8 @@
 AlloSystem Example: Multi-file application
 
 Description:
-This demonstrates how to write an application that uses multiple files. It can be run from
+This demonstrates how to write an application that uses multiple files. It can
+be run from
 the AlloSystem root directory using:
 
 ./run.sh examples/multifile
@@ -25,10 +26,10 @@ using namespace al;
 
 MyWindow win1;
 
-int main(){
-	win1.add(new StandardWindowKeyControls);
-	win1.create(Window::Dim(800, 600));
+int main() {
+  win1.add(new StandardWindowKeyControls);
+  win1.create(Window::Dim(800, 600));
 
-	MainLoop::start();
-	return 0;
+  MainLoop::start();
+  return 0;
 }

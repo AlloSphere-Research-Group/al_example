@@ -6,9 +6,9 @@
 // - Use Gamma's SoundFile class to save a sound file
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
 #include "Gamma/SoundFile.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 using namespace gam;

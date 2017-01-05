@@ -4,8 +4,8 @@
 // - how do we make lots of spheres and sines?
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 struct AlloApp : App {

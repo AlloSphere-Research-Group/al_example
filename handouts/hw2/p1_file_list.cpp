@@ -7,14 +7,14 @@
 // a point sprite, and on each frame adds random noise to the
 // position of each particle, which is reset on any keypress.
 
-#include "allocore/io/al_App.hpp"
 #include <cassert>  // gets you assert()
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;
 
 // for sorting the FileList
-bool sort(FilePath a, FilePath b){ return a.filepath() < b.filepath();}
+bool sort(FilePath a, FilePath b) { return a.filepath() < b.filepath(); }
 
 struct AlloApp : App {
   Texture textureSprite;
@@ -24,7 +24,6 @@ struct AlloApp : App {
   FileList files;
 
   AlloApp() {
-
     SearchPaths searchPaths;
     searchPaths.addSearchPath("handouts");
     searchPaths.addSearchPath("student");
@@ -32,12 +31,12 @@ struct AlloApp : App {
     // matches .png .jpg files and adds them to a FileList
     files = searchPaths.glob("(.*)\\.(png|jpg|JPG)");
     cout << files.count() << endl;
-    files.sort(sort); // sort files by filepath
+    files.sort(sort);  // sort files by filepath
     files.print();
 
-    // load currently selected file 
+    // load currently selected file
     loadImage(files().filepath());
-    
+
     // we're going to render each vertex in the mesh as a so called "point
     // sprite" because it's prettier than rendering with simple points and it's
     // cheaper than rendering with quads or circles. we make a 16x16 texture and
@@ -73,7 +72,7 @@ struct AlloApp : App {
     time = 0;
   }
 
-  void loadImage(std::string imageFullPath){
+  void loadImage(std::string imageFullPath) {
     mesh.reset();
     homePosition.clear();
 
@@ -145,7 +144,6 @@ struct AlloApp : App {
     }
 
     mesh.primitive(Graphics::POINTS);
-
   }
 
   virtual void onAnimate(double dt) {
@@ -174,10 +172,10 @@ struct AlloApp : App {
       mesh.vertices()[i] = homePosition[i];
 
     // select next or previous file and reload image
-    if(k.key() == '.'){
+    if (k.key() == '.') {
       files.next();
       loadImage(files().filepath());
-    } else if(k.key() == ','){
+    } else if (k.key() == ',') {
       files.prev();
       loadImage(files().filepath());
     }

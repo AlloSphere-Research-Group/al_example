@@ -7,9 +7,9 @@
 // Adds waveform display
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Gamma.h"
 #include "Gamma/SamplePlayer.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 
@@ -35,12 +35,12 @@ static void addWaveformDisplay(Mesh& m, gam::SamplePlayer<>& s) {
     //
     int w = 2;
     int p = s.pos() / zoomOut;
-    if( p >= i-w && p <= i+w){
-      m.color(RGB(1,0,0));
-      m.color(RGB(1,0,0));
-    } else{
-      m.color(RGB(1,1,1));
-      m.color(RGB(1,1,1));
+    if (p >= i - w && p <= i + w) {
+      m.color(RGB(1, 0, 0));
+      m.color(RGB(1, 0, 0));
+    } else {
+      m.color(RGB(1, 1, 1));
+      m.color(RGB(1, 1, 1));
     }
   }
 }

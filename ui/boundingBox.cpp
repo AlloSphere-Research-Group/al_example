@@ -3,7 +3,7 @@ Allocore Example: Bounding Box
 
 Description:
 This example demonstrates how render a bounding box around a mesh
-and render labels and tic marks 
+and render labels and tic marks
 
 Author:
 Tim Wood, April 2016
@@ -14,46 +14,45 @@ Tim Wood, April 2016
 using namespace al;
 
 class MyApp : public App {
-public:
+ public:
   bool loadedFont;
   double t;
-  Light light;      
-  Material material; 
-  Mesh mesh; 
+  Light light;
+  Material material;
+  Mesh mesh;
 
   BoundingBox bb;
   Font font;
 
-  MyApp(){
-
+  MyApp() {
     // try to load font
     loadedFont = font.load("allocore/share/fonts/VeraMono.ttf", 72);
-    if(!loadedFont) std::cout << "Failed to load font. Not rendering labels.." << std::endl;
+    if (!loadedFont)
+      std::cout << "Failed to load font. Not rendering labels.." << std::endl;
 
     // position camera
-    nav().pos(0,0,20);
+    nav().pos(0, 0, 20);
 
     // Create a red sphere mesh
-    addSphere(mesh,5);
+    addSphere(mesh, 5);
     mesh.generateNormals();
-    mesh.color(RGB(1,0,0));
+    mesh.color(RGB(1, 0, 0));
 
     // Initialize BoundingBox
     bb.set(mesh);
-    bb.glUnitLength = 5; // ??? fix
+    bb.glUnitLength = 5;  // ??? fix
 
     // create window
     initWindow();
   }
 
-  void onAnimate(double dt){
+  void onAnimate(double dt) {
     // move light in a circle
     t += dt;
-    light.pos(10*cos(t),0,10*sin(t));
+    light.pos(10 * cos(t), 0, 10 * sin(t));
   }
 
-  void onDraw(Graphics& g){
-
+  void onDraw(Graphics& g) {
     // draw lit mesh
     g.lighting(true);
     light();
@@ -62,13 +61,13 @@ public:
 
     // draw white boundingbox
     g.lighting(false);
-    g.color(1,1,1);
+    g.color(1, 1, 1);
 
     bool tics = true;
     bool grid = true;
     bb.draw(g, tics, grid);
 
-    if(loadedFont){
+    if (loadedFont) {
       g.blendAdd();
       bb.drawLabels(g, font, nav(), Pose(), 1);
       g.blendOff();
@@ -76,6 +75,4 @@ public:
   }
 };
 
-int main(){
-  MyApp().start();
-}
+int main() { MyApp().start(); }

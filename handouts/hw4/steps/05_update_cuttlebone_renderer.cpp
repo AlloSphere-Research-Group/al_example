@@ -6,8 +6,8 @@
 // Step 05 - update our renderer to use the common stuff
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

@@ -12,45 +12,44 @@ Lance Putnam, 1/2012 (putnam.lance at gmail dot com)
 
 using namespace al;
 
-class MyApp : public App{
-public:
+class MyApp : public App {
+ public:
+  Mesh verts;
+  Light light;
+  DisplayList dlist;
 
-	Mesh verts;
-	Light light;
-	DisplayList dlist;
+  MyApp() {
+    // Create a sphere
+    addSphere(verts, 0.25);
+    verts.generateNormals();
 
-	MyApp(){
-		// Create a sphere
-		addSphere(verts, 0.25);
-		verts.generateNormals();
+    nav().pos(5, 5, 20);
+    initWindow();
+  }
 
-		nav().pos(5,5,20);
-		initWindow();
-	}
+  void onCreate(const ViewpointWindow& win) {
+    // Compile the display list
+    dlist.begin();
+    graphics().draw(verts);
+    dlist.end();
+  }
 
-	void onCreate(const ViewpointWindow& win){
-		// Compile the display list
-		dlist.begin();
-		graphics().draw(verts);
-		dlist.end();
-	}
+  void onDraw(Graphics& g) {
+    light.dir(1, 1, 1);
+    light();
 
-	void onDraw(Graphics& g){
-		light.dir(1,1,1);
-		light();
-
-		// Call our display list multiple times
-		for(int k=0; k<10; ++k){
-		for(int j=0; j<10; ++j){
-		for(int i=0; i<10; ++i){
-			g.pushMatrix();
-				g.translate(i,j,k);
-				dlist.draw();
-			g.popMatrix();
-		}}}
-	}
+    // Call our display list multiple times
+    for (int k = 0; k < 10; ++k) {
+      for (int j = 0; j < 10; ++j) {
+        for (int i = 0; i < 10; ++i) {
+          g.pushMatrix();
+          g.translate(i, j, k);
+          dlist.draw();
+          g.popMatrix();
+        }
+      }
+    }
+  }
 };
 
-int main(){
-	MyApp().start();
-}
+int main() { MyApp().start(); }

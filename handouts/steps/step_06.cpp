@@ -29,4 +29,3 @@ int main(int argc, char* argv[]) {
   app.start();
   return 0;
 }
-

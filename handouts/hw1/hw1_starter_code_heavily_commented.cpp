@@ -91,7 +91,7 @@ struct AlloApp : App {
     // primitive for meshes that are made with addSphere(), so we can comment
     // this out.
     //
-    //m.primitive(Graphics::TRIANGLES);
+    // m.primitive(Graphics::TRIANGLES);
 
     // this scales (multiplies) each vertex by the value. the CPU executes
     // these multiplications, not the GPU.
@@ -272,4 +272,3 @@ int main(int argc, char* argv[]) {
 // 1) main is special in C++ in that you don't have to return anything
 // 2) we aren't using argc/argv, so we can omit them
 // 3) we only use the app variable once to call start(), so AlloApp().start();
-

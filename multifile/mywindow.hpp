@@ -1,4 +1,4 @@
 
-struct MyWindow : Window{
+struct MyWindow : Window {
   bool onFrame();
 };

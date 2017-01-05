@@ -4,8 +4,8 @@
 // - explain pushMatrix(), popMatrix(), and translate()
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 
@@ -38,8 +38,7 @@ struct AlloApp : App {
 
   virtual void onSound(AudioIOData& io) {
     gam::Sync::master().spu(audioIO().fps());
-    while (io())
-      io.out(0) = io.out(1) = sine();
+    while (io()) io.out(0) = io.out(1) = sine();
   }
 
   virtual void onKeyDown(const ViewpointWindow&, const Keyboard& k) {

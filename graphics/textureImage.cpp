@@ -14,18 +14,16 @@ using namespace al;
 using namespace std;
 
 class MyApp : public App {
-public:
-
+ public:
   // Image and Texture handle reading and displaying image files.
   //
   Image image;
   Texture texture;
 
   MyApp() {
-
     // Load a .jpg file
     //
-    const char *filename = "../../share/images/tiny.jpg";
+    const char* filename = "../../share/images/tiny.jpg";
 
     if (image.load(filename)) {
       printf("Read image from %s\n", filename);
@@ -40,8 +38,8 @@ public:
     // Don't bother trying to print the image or the image's array directly
     // using C++ syntax.  This won't work:
     //
-    //cout << "Image " << image << endl;
-    //cout << "   Array: " << image.array() << endl;
+    // cout << "Image " << image << endl;
+    // cout << "   Array: " << image.array() << endl;
 
     // Make a reference to our image's array so we can just say "array" instead
     // of "image.array()":
@@ -52,7 +50,7 @@ public:
     // data elements in each cell.  In our case three components would
     // represent R, G, B.
     //
-    cout << "array has " << (int) array.components() << " components" << endl;
+    cout << "array has " << (int)array.components() << " components" << endl;
 
     // Each of these data elements is represented by the same numeric type:
     //
@@ -61,13 +59,13 @@ public:
     // But that type is represented as an enum (see al_Array.h), so if you want
     // to read it use this function:
     //
-    printf("Array's type (human readable) is %s\n", allo_type_name(array.type()));
+    printf("Array's type (human readable) is %s\n",
+           allo_type_name(array.type()));
 
     // The array itself also has a print method:
     //
-    cout << "Array.print: "  << endl << "   ";
-    array.print();    
-
+    cout << "Array.print: " << endl << "   ";
+    array.print();
 
     // Code below assumes this type is 8-bit unsigned integer, so this line
     // guarantees that's the case, or else crashes the program if not:
@@ -91,28 +89,26 @@ public:
 
     for (size_t row = 0; row < array.height(); ++row) {
       for (size_t col = 0; col < array.width(); ++col) {
-
         // read the pixel at (row, col) and print
         //
-        //array.read(&pixel, row, col);
+        // array.read(&pixel, row, col);
         array.read(&pixel, col, row);
-        cout << "image[" << row << "," << col << "]=" <<
-        (int)pixel.r << "," << (int)pixel.g << "," << (int)pixel.b << endl;
+        cout << "image[" << row << "," << col << "]=" << (int)pixel.r << ","
+             << (int)pixel.g << "," << (int)pixel.b << endl;
       }
     }
   }
 
   void onDraw(Graphics& g) {
-
     g.pushMatrix();
 
-      // Push the texture/quad back 5 units (away from the camera)
-      //
-      g.translate(0, 0, -5);
+    // Push the texture/quad back 5 units (away from the camera)
+    //
+    g.translate(0, 0, -5);
 
-      // See void Texture::quad(...) in the Doxygen
-      //
-      texture.quad(g);
+    // See void Texture::quad(...) in the Doxygen
+    //
+    texture.quad(g);
 
     g.popMatrix();
   }

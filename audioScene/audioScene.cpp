@@ -4,11 +4,11 @@
 //
 // Adapted from allocore/examples/audioscene.cpp by Ryan McGee
 //
-#include "allocore/al_Allocore.hpp"
-#include "allocore/sound/al_Vbap.hpp"
-#include "allocore/sound/al_Dbap.hpp"
-#include "allocore/sound/al_Ambisonics.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/al_Allocore.hpp"
+#include "allocore/sound/al_Ambisonics.hpp"
+#include "allocore/sound/al_Dbap.hpp"
+#include "allocore/sound/al_Vbap.hpp"
 
 using namespace al;
 using namespace std;

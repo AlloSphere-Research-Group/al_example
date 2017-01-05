@@ -6,13 +6,13 @@
 // lines marked with XXX are vital to using Cuttlebone
 //
 
+#include "Cuttlebone/Cuttlebone.hpp"  // XXX
 #include "allocore/io/al_App.hpp"
-#include "Cuttlebone/Cuttlebone.hpp" // XXX
 
 using namespace al;
 using namespace std;
 
-#include "common.hpp" // XXX
+#include "common.hpp"  // XXX
 
 struct Particle {
   Vec3f position, velocity;
@@ -39,8 +39,8 @@ struct AlloApp : App {
 
   Particle particle[N];
 
-  cuttlebone::Taker<State> taker; // XXX
-  State state; // XXX
+  cuttlebone::Taker<State> taker;  // XXX
+  State state;                     // XXX
 
   AlloApp() {
     addSphere(m);
@@ -50,11 +50,11 @@ struct AlloApp : App {
   }
 
   virtual void onAnimate(double dt) {
-    taker.get(state); // XXX
+    taker.get(state);  // XXX
     for (int i = 0; i < N; i++) {
-      particle[i].position = state.position[i]; // XXX
-      particle[i].radius = state.radius[i]; // XXX
-      particle[i].hue = state.hue[i]; // XXX
+      particle[i].position = state.position[i];  // XXX
+      particle[i].radius = state.radius[i];      // XXX
+      particle[i].hue = state.hue[i];            // XXX
     }
     // cout << state.frame << endl;
   }
@@ -74,6 +74,6 @@ struct AlloApp : App {
 //
 int main() {
   AlloApp app;
-  app.taker.start(); // XXX
+  app.taker.start();  // XXX
   app.start();
 }

@@ -4,8 +4,8 @@
 // - explain why scale() effects all spheres
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 
@@ -23,7 +23,7 @@ struct AlloApp : App {
     light.pos(0, 0, 10);
     addSphere(m);
 
-    m.scale(0.2); // XXX
+    m.scale(0.2);  // XXX
 
     m.generateNormals();
     for (int i = 0; i < N; ++i) {
@@ -48,8 +48,7 @@ struct AlloApp : App {
     gam::Sync::master().spu(audioIO().fps());
     while (io()) {
       float s = 0;
-      for (int i = 0; i < N; ++i)
-        s += sine[i]();
+      for (int i = 0; i < N; ++i) s += sine[i]();
       io.out(0) = io.out(1) = s / N;
     }
   }

@@ -4,8 +4,8 @@
 // Author: Karl Yerkes (2015)
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;
@@ -231,7 +231,8 @@ struct AlloApp : App {
 
     if (shouldTakeSnapshot) {
       shouldTakeSnapshot = false;
-      string fileName = string("snapshot-") + std::to_string(snapshotNumber) + string(".png");
+      string fileName =
+          string("snapshot-") + std::to_string(snapshotNumber) + string(".png");
       snapshot(fileName, window().width(), window().height());
       snapshotNumber++;
     }

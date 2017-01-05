@@ -13,9 +13,9 @@
 // Step 04 - update the simulator to use the stuff in common.
 //
 
-#include "allocore/io/al_App.hpp"
-#include "Gamma/Oscillator.h"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

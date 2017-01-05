@@ -5,8 +5,8 @@
 // - why does the sound pulse at 1 second intervals?
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 
@@ -45,8 +45,7 @@ struct AlloApp : App {
 
     while (io()) {
       float s = 0;
-      for (int i = 0; i < N; ++i)
-        s += sine[i]();
+      for (int i = 0; i < N; ++i) s += sine[i]();
       io.out(0) = s / N;
       io.out(1) = s / N;
     }

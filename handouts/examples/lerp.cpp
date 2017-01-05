@@ -32,9 +32,9 @@ struct AlloApp : App {
     m.generateNormals();
     initWindow();
 
-    for(int i=0; i < 3; i++){
-      pos[i] = Vec3f(-1,1-i,0);
-      destPos[i] = Vec3f(-1,1-i,0);
+    for (int i = 0; i < 3; i++) {
+      pos[i] = Vec3f(-1, 1 - i, 0);
+      destPos[i] = Vec3f(-1, 1 - i, 0);
     }
     startPos0 = pos[0];
     time = 0.0;
@@ -43,10 +43,10 @@ struct AlloApp : App {
   }
 
   virtual void onDraw(Graphics& g, const Viewpoint& v) {
-    for(int i=0; i<3; i++){
+    for (int i = 0; i < 3; i++) {
       g.pushMatrix();
       g.translate(pos[i]);
-      g.color(i==0,i==1,i==2);
+      g.color(i == 0, i == 1, i == 2);
       g.draw(m);
       g.popMatrix();
     }
@@ -56,8 +56,10 @@ struct AlloApp : App {
     time += dt;
 
     // linear animation, must keep track of time and starting position
-    if(time <= 1.0) pos[0] = Vec3f::lerp(startPos0, destPos[0], time);
-    else time = 1;
+    if (time <= 1.0)
+      pos[0] = Vec3f::lerp(startPos0, destPos[0], time);
+    else
+      time = 1;
 
     // exponential out animation, go 10% of the way there every frame
     // starts fast and slows down to a stop
@@ -65,25 +67,22 @@ struct AlloApp : App {
 
     // exponential start and finish, slow speed up and slow down
     // also interpolate the amount of interpolation!
-    amt = lerp(amt,0.1,0.1);
+    amt = lerp(amt, 0.1, 0.1);
     pos[2].lerp(destPos[2], amt);
-
   }
 
   // onMouseMove is when the mouse moves
   virtual void onMouseDown(const ViewpointWindow& w, const Mouse& mouse) {
-
     Rayd ray = getPickRay(w, mouse.x(), mouse.y());
 
     // intersect ray with plane at origin
-    float t = ray.intersectPlane(Vec3f(0,0,0), Vec3f(0,0,1));
+    float t = ray.intersectPlane(Vec3f(0, 0, 0), Vec3f(0, 0, 1));
 
     // get x position of interseciton point
     float x = ray(t).x;
 
     // set destination x positions
-    for(int i=0; i < 3; i++)
-      destPos[i].x = x;
+    for (int i = 0; i < 3; i++) destPos[i].x = x;
 
     // reset linear animation state
     startPos0.set(pos[0]);
@@ -104,4 +103,3 @@ int main(int argc, char* argv[]) {
   app.start();
   return 0;
 }
-

@@ -13,19 +13,19 @@ Lance Putnam, May 2011
 using namespace al;
 
 class MyApp : public App {
-public:
-	ShaderProgram shader;
-	Mesh shape;
-	Light light;
-	Material material;
-	double angle = 0;
+ public:
+  ShaderProgram shader;
+  Mesh shape;
+  Light light;
+  Material material;
+  double angle = 0;
 
-	MyApp(){
-		addTorus(shape);
-		shape.generateNormals();
+  MyApp() {
+    addTorus(shape);
+    shape.generateNormals();
 
-		shader.compile(
-		R"(
+    shader.compile(
+        R"(
 			varying vec3 normal, lightDir, eyeDir;
 			void main(){
 				// Normal in eye space
@@ -46,7 +46,7 @@ public:
 				gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 			}
 		)",
-		R"(
+        R"(
 			varying vec3 normal, lightDir, eyeDir;
 			void main(){
 				// Initialize color to sum of ambient components
@@ -70,44 +70,39 @@ public:
 				}
 				gl_FragColor = color;
 			}
-		)"
-		);
+		)");
 
-		nav().pullBack(4);
-		initWindow();
-	}
+    nav().pullBack(4);
+    initWindow();
+  }
 
-	void onAnimate(double dt){
-		angle += dt*10;
-		if(angle >= 360) angle -= 360;
-	}
+  void onAnimate(double dt) {
+    angle += dt * 10;
+    if (angle >= 360) angle -= 360;
+  }
 
-	void onDraw(Graphics& g){
+  void onDraw(Graphics& g) {
+    // Set lighting properties
+    material.ambientAndDiffuse(HSV(0, 0.8));
+    material.specular(RGB(0.4));
+    material.shininess(16);
+    material();
+    light.dir(1, 1, 1);
+    light();
 
-		// Set lighting properties
-		material.ambientAndDiffuse(HSV(0,0.8));
-		material.specular(RGB(0.4));
-		material.shininess(16);
-		material();
-		light.dir(1,1,1);
-		light();
+    // Render
+    shader.begin();
+    g.pushMatrix();
+    g.rotate(angle, 1, 0, 0);
+    g.rotate(angle * 8, 0, 1, 0);
+    g.draw(shape);
+    g.popMatrix();
+    shader.end();
+  }
 
-		// Render
-		shader.begin();
-			g.pushMatrix();
-			g.rotate(angle  , 1,0,0);
-			g.rotate(angle*8, 0,1,0);
-			g.draw(shape);
-			g.popMatrix();
-		shader.end();
-	}
-
-	void onKeyDown(const Keyboard& k){
-		if(k.key('l')) shader.toggleActive();
-	}
-
+  void onKeyDown(const Keyboard& k) {
+    if (k.key('l')) shader.toggleActive();
+  }
 };
 
-int main(){
-	MyApp().start();
-}
+int main() { MyApp().start(); }

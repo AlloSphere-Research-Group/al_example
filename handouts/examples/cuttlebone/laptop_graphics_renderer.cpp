@@ -5,8 +5,8 @@
 // Cuttlebone "Laptop Graphics Renderer"
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "allocore/io/al_App.hpp"
 
 #include "common.hpp"
 

@@ -13,9 +13,9 @@
 // Step 10 - update the simulator to broadcast radius and hue
 //
 
-#include "allocore/io/al_App.hpp"
-#include "Gamma/Oscillator.h"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 #include "alloutil/al_Simulator.hpp"
 
 using namespace al;

@@ -6,9 +6,9 @@
 // - Spawn a thread
 //
 
-#include "allocore/io/al_App.hpp"
 #include <iostream>
 #include <thread>
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 

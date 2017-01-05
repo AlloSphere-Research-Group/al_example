@@ -12,9 +12,9 @@
 
 // Pull in the functionality this example uses
 //
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Gamma.h"
 #include "Gamma/SamplePlayer.h"
+#include "allocore/io/al_App.hpp"
 
 // "using namespace" allows us to access names inside these two namespaces
 // without having to qualify them like "std::cout"

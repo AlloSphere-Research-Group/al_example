@@ -20,9 +20,7 @@ struct AlloApp : App {
     addSphere(m);
     initWindow();
   }
-  virtual void onDraw(Graphics& g, const Viewpoint& v) {
-    g.draw(m);
-  }
+  virtual void onDraw(Graphics& g, const Viewpoint& v) { g.draw(m); }
 };
 
 int main(int argc, char* argv[]) {
@@ -30,4 +28,3 @@ int main(int argc, char* argv[]) {
   app.start();
   return 0;
 }
-

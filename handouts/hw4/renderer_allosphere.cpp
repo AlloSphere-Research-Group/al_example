@@ -6,8 +6,8 @@
 // lines marked with XXX are vital to using Cuttlebone
 //
 
-#include "alloutil/al_OmniStereoGraphicsRenderer.hpp"
 #include "Cuttlebone/Cuttlebone.hpp"  // XXX
+#include "alloutil/al_OmniStereoGraphicsRenderer.hpp"
 
 using namespace al;
 using namespace std;
@@ -79,6 +79,6 @@ struct AlloApp : OmniStereoGraphicsRenderer {
 //
 int main() {
   AlloApp app;
-  app.taker.start(); // XXX
+  app.taker.start();  // XXX
   app.start();
 }

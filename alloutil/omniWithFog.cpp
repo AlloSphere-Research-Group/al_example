@@ -24,15 +24,15 @@ struct MyApp : OmniApp {
     // say how much lighting you want
     shader().uniform("lighting", 1.0);
 
-/*!*/ g.fog(lens().far(), lens().near()+2, Color(0, 0, 0, 1));
-/*!*/ shader().uniform("fogCurve", 30.0);
+    /*!*/ g.fog(lens().far(), lens().near() + 2, Color(0, 0, 0, 1));
+    /*!*/ shader().uniform("fogCurve", 30.0);
 
     g.draw(mesh);
   }
 
   virtual void onAnimate(al_sec dt) {
-    //light.pos(nav().pos());
-    //std::cout << dt << std::endl;
+    // light.pos(nav().pos());
+    // std::cout << dt << std::endl;
   }
 
   virtual void onSound(AudioIOData& io) {
@@ -41,13 +41,9 @@ struct MyApp : OmniApp {
     }
   }
 
-  virtual void onMessage(osc::Message& m) {
-    OmniApp::onMessage(m);
-  }
+  virtual void onMessage(osc::Message& m) { OmniApp::onMessage(m); }
 
-  virtual bool onKeyDown(const Keyboard& k){
-    return true;
-  }
+  virtual bool onKeyDown(const Keyboard& k) { return true; }
 
   std::string vertexCode() {
     return R"(
@@ -112,7 +108,7 @@ struct MyApp : OmniApp {
   }
 };
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
   MyApp().start();
   return 0;
 }

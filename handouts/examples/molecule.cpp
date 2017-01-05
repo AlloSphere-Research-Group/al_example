@@ -22,16 +22,16 @@ struct Molecule {
   void onDraw(Graphics& g) {
     g.draw(ball);
     g.pushMatrix();
-      g.translate(0, -0.5, -1.7);
-      g.draw(bar);
+    g.translate(0, -0.5, -1.7);
+    g.draw(bar);
     g.popMatrix();
     g.pushMatrix();
-      g.translate(0, +0.5, -1.7);
-      g.draw(bar);
+    g.translate(0, +0.5, -1.7);
+    g.draw(bar);
     g.popMatrix();
     g.pushMatrix();
-      g.translate(0, 0, -3.0);
-      g.draw(ball);
+    g.translate(0, 0, -3.0);
+    g.draw(ball);
     g.popMatrix();
   }
 };

@@ -7,8 +7,8 @@
 // - How to update texture coordinates
 //
 
-#include "allocore/io/al_App.hpp"
 #include <cassert>  // gets you assert()
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

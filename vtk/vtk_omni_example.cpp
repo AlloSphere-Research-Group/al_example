@@ -12,74 +12,69 @@
 #include <vtkNew.h>
 #include <vtkPolyDataMapper.h>
 
-
 using namespace al;
 
 class MyApp : public OmniApp {
-public:
+ public:
+  Mesh mesh;
+  Light light;
 
-	Mesh mesh;
-    Light light;
+  // An ExternalVTKWidget and vtkExternalOpenGLRenderWindow are needed
+  vtkNew<ExternalVTKWidget> externalVTKWidget;
+  vtkNew<vtkExternalOpenGLRenderWindow> renWin;
+  // Then actors, mappers and sources can be declared here
+  vtkNew<vtkActor> actor;
+  vtkNew<vtkPolyDataMapper> mapper;
 
-    // An ExternalVTKWidget and vtkExternalOpenGLRenderWindow are needed
-    vtkNew<ExternalVTKWidget> externalVTKWidget;
-    vtkNew<vtkExternalOpenGLRenderWindow> renWin;
-    // Then actors, mappers and sources can be declared here
-	vtkNew<vtkActor> actor;
-	vtkNew<vtkPolyDataMapper> mapper;
+  MyApp() {
+    mesh.primitive(Graphics::TRIANGLES);
+    addSphere(mesh);
+    nav().pos(0, 0, 2);
+  }
 
-    MyApp() {
-      mesh.primitive(Graphics::TRIANGLES);
-      addSphere(mesh);
-      nav().pos(0,0,2);
-    }
+  virtual ~MyApp() {}
 
-    virtual ~MyApp() {}
-
-    virtual void onDraw(Graphics& g) {
+  virtual void onDraw(Graphics& g) {
     // Draw VTK stuff
-      externalVTKWidget->GetRenderWindow()->Render();
-      glPopAttrib();
-      light();
-      // say how much lighting you want
-      shader().uniform("lighting", 1.0);
-      g.polygonMode(Graphics::LINE); // wireframe mode
-      g.pushMatrix();
+    externalVTKWidget->GetRenderWindow()->Render();
+    glPopAttrib();
+    light();
+    // say how much lighting you want
+    shader().uniform("lighting", 1.0);
+    g.polygonMode(Graphics::LINE);  // wireframe mode
+    g.pushMatrix();
     //   g.rotate(phase*360, 0,1,0);
-      g.draw(mesh);
-      g.popMatrix();
-    }
+    g.draw(mesh);
+    g.popMatrix();
+  }
 
-    virtual bool onCreate() override {
-        OmniApp::onCreate();
+  virtual bool onCreate() override {
+    OmniApp::onCreate();
 
-        // configure the external VTK widget
-        externalVTKWidget->SetRenderWindow(renWin.GetPointer());
+    // configure the external VTK widget
+    externalVTKWidget->SetRenderWindow(renWin.GetPointer());
 
-        // Connect the mapper to the actor
-        actor->SetMapper(mapper.GetPointer());
+    // Connect the mapper to the actor
+    actor->SetMapper(mapper.GetPointer());
 
-        // Add actor to renderer
-        vtkRenderer* ren = externalVTKWidget->AddRenderer();
-        ren->AddActor(actor.GetPointer());
+    // Add actor to renderer
+    vtkRenderer* ren = externalVTKWidget->AddRenderer();
+    ren->AddActor(actor.GetPointer());
 
-        // Create a source and connect it to the mapper
-        vtkNew<vtkCubeSource> cs;
-        mapper->SetInputConnection(cs->GetOutputPort());
+    // Create a source and connect it to the mapper
+    vtkNew<vtkCubeSource> cs;
+    mapper->SetInputConnection(cs->GetOutputPort());
 
-        actor->RotateX(45.0);
-        actor->RotateY(45.0);
+    actor->RotateX(45.0);
+    actor->RotateY(45.0);
 
-        return true;
-    }
+    return true;
+  }
 
-    virtual void onAnimate(al_sec dt) {
-      actor->RotateX(2);
-      pose = nav();
-    }
+  virtual void onAnimate(al_sec dt) {
+    actor->RotateX(2);
+    pose = nav();
+  }
 };
 
-
-int main(){
-	MyApp().start();
-}
+int main() { MyApp().start(); }

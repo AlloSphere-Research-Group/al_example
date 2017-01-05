@@ -4,8 +4,8 @@
 // - mapping ranges of values (i.e. mouse -> frequency)
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 

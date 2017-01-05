@@ -3,8 +3,8 @@
 //  explicitly storing color
 //  amplitude of sine depends on app navigation, which agent "doesn't know"
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 #define N 20
@@ -19,7 +19,7 @@ struct Agent {
     sine.freq(220.0 + position.mag() * 5);
   }
 
-  void onDraw(Graphics& g, const Viewpoint& v, Mesh &m) {
+  void onDraw(Graphics& g, const Viewpoint& v, Mesh& m) {
     g.pushMatrix();
     g.color(color);
     g.translate(position);
@@ -27,12 +27,8 @@ struct Agent {
     g.popMatrix();
   }
 
-  float onSound() {
-    return sine();
-  }
-
+  float onSound() { return sine(); }
 };
-
 
 struct AlloApp : App {
   Material material;
@@ -72,11 +68,12 @@ struct AlloApp : App {
     while (io()) {
       float s = 0;
       for (int i = 0; i < N; ++i) {
-      float distance = (nav().pos() - agents[i].position).mag();
-        // constrain distance so no matter how we navigate each agent is not too loud...
-      if (distance < 0.5) distance = 0.5;
+        float distance = (nav().pos() - agents[i].position).mag();
+        // constrain distance so no matter how we navigate each agent is not too
+        // loud...
+        if (distance < 0.5) distance = 0.5;
         // ... or too quiet
-      if (distance > 7) distance = 7;
+        if (distance > 7) distance = 7;
         s += agents[i].onSound() / distance;
       }
       io.out(0) = io.out(1) = s * 0.08;

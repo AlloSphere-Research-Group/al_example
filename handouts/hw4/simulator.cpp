@@ -13,9 +13,9 @@
 // lines marked with XXX are vital to using Cuttlebone
 //
 
-#include "allocore/io/al_App.hpp"
-#include "Gamma/Oscillator.h"
 #include "Cuttlebone/Cuttlebone.hpp"  // XXX
+#include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 #include "alloutil/al_Simulator.hpp"  // XXX
 
 using namespace al;
@@ -47,7 +47,8 @@ void printFactsAboutState(int size) {
 
   cout << "On a 1Gb Ethernet LAN (like the MAT network), ";
   if (gbe / size > 60.0f)
-    cout << "you will use \n" << 100.0f * (size * 60.0f) / gbe
+    cout << "you will use \n"
+         << 100.0f * (size * 60.0f) / gbe
          << "\% of the effective bandwidth with a framerate of 60 Hz." << endl;
   else
     cout << "your framerate will be *network limited* to " << gbe / size
@@ -55,7 +56,8 @@ void printFactsAboutState(int size) {
 
   cout << "On a 10Gb Ethernet LAN (like the AlloSphere network), ";
   if (10 * gbe / size > 60.0f)
-    cout << "you will use \n" << 100.0f * (size * 60.0f) / (10 * gbe)
+    cout << "you will use \n"
+         << 100.0f * (size * 60.0f) / (10 * gbe)
          << "\% of the effective bandwidth with a framerate of 60 Hz." << endl;
   else {
     cout << "your framerate will be *network limited* to " << 10 * gbe / size

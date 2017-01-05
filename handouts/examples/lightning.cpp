@@ -11,9 +11,9 @@
 // http://gamma.cs.unc.edu/FAST_LIGHTNING/lightning_tvcg_2007.pdf
 //
 
-#include "allocore/io/al_App.hpp"
-#include <vector>
 #include <algorithm>
+#include <vector>
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;
@@ -26,9 +26,10 @@ struct AlloApp : App {
   double strikeTime;
 
   AlloApp() {
-    // using GL_TRIANGLES so that we can have branching lighting in the same mesh
+    // using GL_TRIANGLES so that we can have branching lighting in the same
+    // mesh
     mesh.primitive(Graphics::TRIANGLES);
-    
+
     // animation variables
     time = 0;
     strikeTime = 1.0;
@@ -76,7 +77,7 @@ struct AlloApp : App {
       // choose random x location for lighting bolt and generate bolt
       float x = rnd::uniformS(2);
       bolt(Vec3f(x, 1, 0), Vec3f(x, -1, 0), 4, 0.02);
-      
+
       // choose random time for next strike
       time = 0;
       strikeTime = rnd::uniform(3.0);
@@ -137,7 +138,7 @@ struct AlloApp : App {
       mesh.vertex(point + normal * width);
       mesh.vertex(prevPoint - normal * width);
       mesh.vertex(point - normal * width);
-      
+
       // our texture doesn't change in y so we can ignore the second texCoord
       mesh.texCoord(0, 0);
       mesh.texCoord(1, 0);

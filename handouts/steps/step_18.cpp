@@ -3,8 +3,8 @@
 // - take a tour of spheres to demonstrate the change
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 

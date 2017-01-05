@@ -19,12 +19,10 @@ struct AlloApp : App {
     addSphere(ourMesh);
     initWindow();
   }
-  virtual void onDraw(Graphics& g, const Viewpoint& v) {
-    g.draw(ourMesh);
-  }
+  virtual void onDraw(Graphics& g, const Viewpoint& v) { g.draw(ourMesh); }
 };
 int main(int argc, char* argv[]) {
-  AlloApp/* silly comment */app;
+  AlloApp /* silly comment */ app;
   app.start();
   return 0;
 }

@@ -17,8 +17,8 @@
 struct State {
   int frame;
   Vec3f position[N];
-  float radius[N]; // new
-  float hue[N]; // new
+  float radius[N];  // new
+  float hue[N];     // new
 };
 
 #endif

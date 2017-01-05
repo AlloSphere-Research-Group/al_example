@@ -6,8 +6,8 @@
 // Step 08 - update our renderer to recieve positions and draw
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

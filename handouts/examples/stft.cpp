@@ -7,8 +7,8 @@
 // - Calculate the Short-Time Fourier Transform on an audio stream
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/DFT.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 using namespace gam;

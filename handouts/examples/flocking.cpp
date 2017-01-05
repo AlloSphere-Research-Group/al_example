@@ -8,8 +8,8 @@
 //   + See https://processing.org/examples/flocking.html
 //
 
-#include "allocore/io/al_App.hpp"
 #include <vector>
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 

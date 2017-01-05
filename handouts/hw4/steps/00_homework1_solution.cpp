@@ -13,8 +13,8 @@
 // Step 00 - we start with Karl's solution to Homework 1, Problem 1
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

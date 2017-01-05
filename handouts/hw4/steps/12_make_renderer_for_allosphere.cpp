@@ -6,8 +6,8 @@
 // Step 12 - make a new "AlloSphere" renderer
 //
 
-#include "alloutil/al_OmniStereoGraphicsRenderer.hpp"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "alloutil/al_OmniStereoGraphicsRenderer.hpp"
 
 using namespace al;
 using namespace std;
@@ -46,7 +46,7 @@ struct AlloApp : OmniStereoGraphicsRenderer {
     addSphere(m);
     m.generateNormals();
     initWindow();
-    pose.pos(0, 0, 10); // XXX use pose instead of nav
+    pose.pos(0, 0, 10);  // XXX use pose instead of nav
   }
 
   virtual void onAnimate(double dt) {

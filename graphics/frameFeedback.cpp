@@ -15,71 +15,65 @@ Lance Putnam, Nov. 2014
 
 using namespace al;
 
-class MyApp : public App{
-public:
+class MyApp : public App {
+ public:
+  Mesh shape;
+  Texture texBlur;
+  float angle;
 
-	Mesh shape;
-	Texture texBlur;
-	float angle;
+  MyApp() {
+    angle = 0;
 
-	MyApp(){
+    // Create a colored square
+    shape.primitive(Graphics::LINE_LOOP);
+    const int N = 4;
+    for (int i = 0; i < N; ++i) {
+      float theta = float(i) / N * 2 * M_PI;
+      shape.vertex(cos(theta), sin(theta));
+      shape.color(HSV(theta / 2 / M_PI));
+    }
 
-		angle = 0;
+    nav().pos(0, 0, 4);
+    initWindow();
+  }
 
-		// Create a colored square
-		shape.primitive(Graphics::LINE_LOOP);
-		const int N = 4;
-		for(int i=0; i<N; ++i){
-			float theta = float(i)/N * 2*M_PI;
-			shape.vertex(cos(theta), sin(theta));
-			shape.color(HSV(theta/2/M_PI));
-		}
+  virtual void onAnimate(double dt) {
+    angle += dt * 90;
+    if (angle >= 360) angle -= 360;
+  }
 
-		nav().pos(0,0,4);
-		initWindow();
-	}
+  virtual void onDraw(Graphics& g, const Viewpoint& v) {
+    // 1. Match texture dimensions to viewport
+    texBlur.resize(v.viewport().w, v.viewport().h);
 
-	virtual void onAnimate(double dt){
-		angle += dt * 90;
-		if(angle >= 360) angle -= 360;
-	}
+    // 2. Draw feedback texture. Try the different varieties!
+    // Note, we do not want to draw the texture if has just been resized.
+    if (!texBlur.shapeUpdated()) {
+      // Plain (non-transformed) feedback
+      // texBlur.quadViewport(g, RGB(0.98));
 
-	virtual void onDraw(Graphics& g, const Viewpoint& v){
+      // Outward feedback
+      texBlur.quadViewport(g, RGB(0.98), 2.01, 2.01, -1.005, -1.005);
 
-		// 1. Match texture dimensions to viewport
-		texBlur.resize(v.viewport().w, v.viewport().h);
-	
-		// 2. Draw feedback texture. Try the different varieties!
-		// Note, we do not want to draw the texture if has just been resized.
-		if(!texBlur.shapeUpdated()){
-			// Plain (non-transformed) feedback
-			//texBlur.quadViewport(g, RGB(0.98));
+      // Inward feedback
+      // texBlur.quadViewport(g, RGB(0.98), 1.99, 1.99, -0.995, -0.995);
 
-			// Outward feedback
-			texBlur.quadViewport(g, RGB(0.98), 2.01, 2.01, -1.005, -1.005);
+      // Oblate feedback
+      // texBlur.quadViewport(g, RGB(0.98), 2.01, 2.0, -1.005, -1.00);
 
-			// Inward feedback
-			//texBlur.quadViewport(g, RGB(0.98), 1.99, 1.99, -0.995, -0.995);
+      // Squeeze feedback!
+      // texBlur.quadViewport(g, RGB(0.98), 2.01, 1.99, -1.005, -0.995);
+    }
 
-			// Oblate feedback
-			//texBlur.quadViewport(g, RGB(0.98), 2.01, 2.0, -1.005, -1.00);
+    // 3. Do your drawing...
+    g.pushMatrix(Graphics::MODELVIEW);
+    g.rotate(angle, 0, 0, 1);
+    g.draw(shape);
+    g.popMatrix();
 
-			// Squeeze feedback!
-			//texBlur.quadViewport(g, RGB(0.98), 2.01, 1.99, -1.005, -0.995);
-		}
-
-		// 3. Do your drawing...
-		g.pushMatrix(Graphics::MODELVIEW);
-			g.rotate(angle, 0,0,1);
-			g.draw(shape);
-		g.popMatrix();
-
-
-		// 4. Copy current (read) frame buffer to texture
-		texBlur.copyFrameBuffer();
-	}
+    // 4. Copy current (read) frame buffer to texture
+    texBlur.copyFrameBuffer();
+  }
 };
 
-int main(){
-	MyApp().start();
-}
+int main() { MyApp().start(); }

@@ -7,9 +7,9 @@
 // - How to render a Waveform with a playback cursor
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Gamma/Oscillator.h"
 #include "Gamma/SamplePlayer.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 using namespace gam;

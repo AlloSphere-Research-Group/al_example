@@ -52,26 +52,26 @@ struct AlloApp : App {
   }
 
   virtual void onDraw(Graphics& g, const Viewpoint& v) {
-
     // draw background textured sphere centered at nav
-    g.lighting(false); // turn off lighting
-    g.depthMask(false); // disable depth buffer, so that background will be drawn over    
+    g.lighting(false);  // turn off lighting
+    g.depthMask(
+        false);  // disable depth buffer, so that background will be drawn over
 
     g.pushMatrix();
-      g.translate(nav().pos());
-      g.rotate(180,0,0,1);
-      bgTexture.bind();
-      g.color(1,1,1); 
-      g.draw(bgMesh);
-      bgTexture.unbind();
+    g.translate(nav().pos());
+    g.rotate(180, 0, 0, 1);
+    bgTexture.bind();
+    g.color(1, 1, 1);
+    g.draw(bgMesh);
+    bgTexture.unbind();
     g.popMatrix();
 
-    g.depthMask(true); // turn depth mask back on
-    light(); // enable light
+    g.depthMask(true);  // turn depth mask back on
+    light();            // enable light
 
     // draw scene here (now just a cube at origin)
     g.pushMatrix();
-    g.color(1,0,0);
+    g.color(1, 0, 0);
     g.draw(m);
     g.popMatrix();
   }
@@ -99,4 +99,3 @@ int main(int argc, char* argv[]) {
   app.start();
   return 0;
 }
-

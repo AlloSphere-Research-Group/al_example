@@ -15,9 +15,9 @@
 // call app.maker.start() in main.
 //
 
-#include "allocore/io/al_App.hpp"
-#include "Gamma/Oscillator.h"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

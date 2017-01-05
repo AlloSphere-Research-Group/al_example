@@ -6,8 +6,8 @@
 // Step 11 - update our renderer to recieve more particle data
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

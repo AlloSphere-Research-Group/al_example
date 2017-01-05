@@ -6,8 +6,8 @@
 // - Measure a value, calculating mean, minimum, and maximum
 //
 
-#include "allocore/io/al_App.hpp"
 #include <algorithm>
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 

@@ -7,11 +7,11 @@
 // - Visualize the FFT with a Mesh
 //
 
-#include "allocore/io/al_App.hpp"
-#include "Gamma/SamplePlayer.h"
-#include "Gamma/DFT.h"
 #include <cassert>
 #include <iomanip>
+#include "Gamma/DFT.h"
+#include "Gamma/SamplePlayer.h"
+#include "allocore/io/al_App.hpp"
 using namespace al;
 using namespace std;
 using namespace gam;

@@ -1,14 +1,14 @@
-#include "allocore/io/al_App.hpp"
-#include "Cuttlebone/Cuttlebone.hpp"
-#include "alloutil/al_Simulator.hpp"
-#include "alloutil/al_AlloSphereAudioSpatializer.hpp"
 #include <Gamma/Noise.h>
 #include <Gamma/Oscillator.h>
+#include "Cuttlebone/Cuttlebone.hpp"
+#include "allocore/io/al_App.hpp"
+#include "alloutil/al_AlloSphereAudioSpatializer.hpp"
+#include "alloutil/al_Simulator.hpp"
 
 using namespace al;
 
-#include <vector>    // vector
 #include <iostream>  // cout
+#include <vector>    // vector
 using namespace std;
 
 // your state definition common to audio/simulation and graphics renderer
@@ -23,7 +23,6 @@ using namespace std;
 #define D (0.08f)   // damping factor
 
 struct Blob : App, AlloSphereAudioSpatializer, InterfaceServerClient {
-
   cuttlebone::Maker<State, 9000> maker;
   State* state;
 
@@ -47,9 +46,9 @@ struct Blob : App, AlloSphereAudioSpatializer, InterfaceServerClient {
   // sound source to represent a sound in space
   SoundSource tap;
 
-  Blob() 
-    : maker(Simulator::defaultBroadcastIP()),
-      InterfaceServerClient(Simulator::defaultInterfaceServerIP()) {
+  Blob()
+      : maker(Simulator::defaultBroadcastIP()),
+        InterfaceServerClient(Simulator::defaultInterfaceServerIP()) {
     // create our state struct
     state = new State;
     memset(state, 0, sizeof(State));
@@ -102,38 +101,38 @@ struct Blob : App, AlloSphereAudioSpatializer, InterfaceServerClient {
     // use this for smoother spatialization and dopler effect
     // good for fast moving sources or listener
     // computationally expensive!!
-    //scene()->usePerSampleProcessing(true);
+    // scene()->usePerSampleProcessing(true);
     scene()->usePerSampleProcessing(false);
-    
+
     // set interface server nav/lens to App's nav/lens
     InterfaceServerClient::setNav(nav());
     InterfaceServerClient::setLens(lens());
-   }
-
-  virtual void poke() {
-      shouldPoke = false;
-      int n = rnd::uniform(N);
-      state->pokedVertex = n;
-      state->pokedVertexRest = original[n];
-      Vec3f v = Vec3f(rnd::uniformS(), rnd::uniformS(), rnd::uniformS());
-      for (unsigned k = 0; k < nn[n].size(); k++) state->p[nn[n][k]] += v * 0.5;
-      state->p[n] += v;
-
-      sine.freq(n*20. + 100.);
-
-      // Illuminate the poke with this weird trick...
-      state->lightPosition = (state->pokedVertexRest) * 2.3 + v * 4.567890;
-
-      LOG("poke!");
   }
 
+  virtual void poke() {
+    shouldPoke = false;
+    int n = rnd::uniform(N);
+    state->pokedVertex = n;
+    state->pokedVertexRest = original[n];
+    Vec3f v = Vec3f(rnd::uniformS(), rnd::uniformS(), rnd::uniformS());
+    for (unsigned k = 0; k < nn[n].size(); k++) state->p[nn[n][k]] += v * 0.5;
+    state->p[n] += v;
+
+    sine.freq(n * 20. + 100.);
+
+    // Illuminate the poke with this weird trick...
+    state->lightPosition = (state->pokedVertexRest) * 2.3 + v * 4.567890;
+
+    LOG("poke!");
+  }
 
   virtual void onAnimate(double dt) {
     static cuttlebone::Stats fps("Blob::step");
     fps(dt);
 
     // handle messages from interface server
-    while (InterfaceServerClient::oscRecv().recv()) {}
+    while (InterfaceServerClient::oscRecv().recv()) {
+    }
 
     // simulate
     if (shouldPoke) poke();
@@ -189,18 +188,16 @@ struct Blob : App, AlloSphereAudioSpatializer, InterfaceServerClient {
     fps(io.secondsPerBuffer());
 
     float maxInputAmplitude = 0.0f;
-    
+
     // set the pose of our audio source
     tap.pose(Pose(state->p[state->pokedVertex], Quatf()));
 
     // "f" is the desired noise amplitude based on the state
     float f =
-      (state->p[state->pokedVertex] - state->pokedVertexRest).mag() - 0.45;
-    
+        (state->p[state->pokedVertex] - state->pokedVertexRest).mag() - 0.45;
+
     if (f > 0.99) f = 0.99;
     if (f < 0) f = 0;
-
-
 
     while (io()) {
       // find largest input amplitude of block
@@ -210,13 +207,15 @@ struct Blob : App, AlloSphereAudioSpatializer, InterfaceServerClient {
 
       // Make this 0.0001 so it will sound good
       float ProportionOfErrorToEliminateOnThisAudioSample = 0.0001;
-      currentNoiseAmplitude += (f-currentNoiseAmplitude) * 
-        ProportionOfErrorToEliminateOnThisAudioSample;
+      currentNoiseAmplitude += (f - currentNoiseAmplitude) *
+                               ProportionOfErrorToEliminateOnThisAudioSample;
 
-      // output sample directly or write sample to output through our audio source
+      // output sample directly or write sample to output through our audio
+      // source
       // io.out(0) = io.out(1) = pinkNoise() * f * state->audioGain;
-      // tap.writeSample( pinkNoise() * currentNoiseAmplitude * state->audioGain );
-      tap.writeSample( sine() * currentNoiseAmplitude * state->audioGain );
+      // tap.writeSample( pinkNoise() * currentNoiseAmplitude * state->audioGain
+      // );
+      tap.writeSample(sine() * currentNoiseAmplitude * state->audioGain);
     }
 
     // poke the blob if the largest amplitude is above some threshold
@@ -248,8 +247,8 @@ struct Blob : App, AlloSphereAudioSpatializer, InterfaceServerClient {
 
 int main() {
   Blob blob;
-  blob.AlloSphereAudioSpatializer::audioIO().start(); // start audio
-  blob.InterfaceServerClient::connect(); // handshake with interface server
-  blob.maker.start(); // it's important to call this.
+  blob.AlloSphereAudioSpatializer::audioIO().start();  // start audio
+  blob.InterfaceServerClient::connect();  // handshake with interface server
+  blob.maker.start();                     // it's important to call this.
   blob.start();
 }

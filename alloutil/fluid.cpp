@@ -8,7 +8,6 @@ Author:
 Graham Wakefield 2011
 */
 
-
 #include "allocore/al_Allocore.hpp"
 #include "allocore/graphics/al_Shader.hpp"
 #include "alloutil/al_Field3D.hpp"
@@ -31,7 +30,7 @@ ShaderProgram shaderP;
 Shader shaderV, shaderF;
 rnd::Random<> rng;
 
-static const char * srcV = R"(
+static const char* srcV = R"(
 uniform sampler3D velocityTex;
 uniform sampler3D intensityTex;
 varying vec3 velocity;
@@ -57,7 +56,7 @@ void main(){
 }
 )";
 
-static const char * srcF = R"(
+static const char* srcF = R"(
 varying vec3 velocity;
 varying vec3 intensity;
 void main() {
@@ -67,160 +66,157 @@ void main() {
 )";
 
 struct MyWindow : public Window {
+  bool onCreate() {
+    // reconfigure textures based on arrays:
+    intensityTex.submit(intensities.front(), true);
+    velocityTex.submit(fluid.velocities.front(), true);
 
-	bool onCreate(){
+    // shader method:
+    shaderV.source(srcV, Shader::VERTEX).compile();
+    shaderF.source(srcF, Shader::FRAGMENT).compile();
+    shaderP.attach(shaderV).attach(shaderF).link();
+    shaderV.printLog();
+    shaderF.printLog();
+    shaderP.printLog();
 
-		// reconfigure textures based on arrays:
-		intensityTex.submit(intensities.front(), true);
-		velocityTex.submit(fluid.velocities.front(), true);
+    // create rendering mesh of lines
+    mesh.reset();
+    mesh.primitive(Graphics::TRIANGLES);
+    for (int x = 0; x < 32; x++) {
+      for (int y = 0; y < 32; y++) {
+        for (int z = 0; z < 32; z++) {
+          // render 2 vertices at the same location
+          // using texcoord as an attribute to distinguish
+          // 'start' and 'end' vertices
+          mesh.texCoord(0, 0);
+          mesh.vertex(x, y, z);
+          mesh.texCoord(0, 1);
+          mesh.vertex(x, y, z);
+          mesh.texCoord(1, 0);
+          mesh.vertex(x, y, z);
+        }
+      }
+    }
 
-		// shader method:
-		shaderV.source(srcV, Shader::VERTEX).compile();
-		shaderF.source(srcF, Shader::FRAGMENT).compile();
-		shaderP.attach(shaderV).attach(shaderF).link();
-		shaderV.printLog();
-		shaderF.printLog();
-		shaderP.printLog();
+    return true;
+  }
 
-		// create rendering mesh of lines
-		mesh.reset();
-		mesh.primitive(Graphics::TRIANGLES);
-		for (int x=0; x<32; x++) {
-		for (int y=0; y<32; y++) {
-		for (int z=0; z<32; z++) {
-			// render 2 vertices at the same location
-			// using texcoord as an attribute to distinguish
-			// 'start' and 'end' vertices
-			mesh.texCoord(0, 0);
-			mesh.vertex(x, y, z);
-			mesh.texCoord(0, 1);
-			mesh.vertex(x, y, z);
-			mesh.texCoord(1, 0);
-			mesh.vertex(x, y, z);
-		}}}
+  bool onFrame() {
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.viewport(0, 0, width(), height());
 
-		return true;
-	}
+    gl.matrixMode(gl.PROJECTION);
+    gl.loadMatrix(Matrix4d::perspective(45, aspect(), 0.1, 100));
 
-	bool onFrame(){
-		gl.clearColor(0,0,0,0);
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-		gl.viewport(0,0, width(), height());
+    gl.matrixMode(gl.MODELVIEW);
+    gl.loadMatrix(
+        Matrix4d::lookAt(Vec3d(16, 16, 64), Vec3d(16, 16, 16), Vec3d(0, 1, 0)));
 
-		gl.matrixMode(gl.PROJECTION);
-		gl.loadMatrix(Matrix4d::perspective(45, aspect(), 0.1, 100));
+    //		// add some forces:
+    //		float t = MainLoop::now() * 0.25;
+    //		float r = 20;
+    //		fluid.addVelocity(Vec3f(12, 12, 16), Vec3f(r*cos(t), r*sin(t),
+    //1));
+    //		fluid.addVelocity(Vec3f(20, 20, 16), Vec3f(-r*cos(t*2), -r*sin(t*2),
+    //0));
+    //		fluid.addVelocity(Vec3f(16, 16, 20), Vec3f(0, -r*cos(t*3),
+    //-r*sin(t*3)));
 
-		gl.matrixMode(gl.MODELVIEW);
-		gl.loadMatrix(Matrix4d::lookAt(Vec3d(16, 16, 64), Vec3d(16, 16, 16), Vec3d(0,1,0)));
+    // add some intensities:
+    float v = 4;
+    intensities.add(Vec3f(12, 20, 16), Vec3f(v, 0, 0).elems());
+    intensities.add(Vec3f(20, 12, 16), Vec3f(0, v, 0).elems());
+    intensities.add(Vec3f(16, 16, 12), Vec3f(0, 0, v).elems());
 
+    float g;
 
-//		// add some forces:
-//		float t = MainLoop::now() * 0.25;
-//		float r = 20;
-//		fluid.addVelocity(Vec3f(12, 12, 16), Vec3f(r*cos(t), r*sin(t), 1));
-//		fluid.addVelocity(Vec3f(20, 20, 16), Vec3f(-r*cos(t*2), -r*sin(t*2), 0));
-//		fluid.addVelocity(Vec3f(16, 16, 20), Vec3f(0, -r*cos(t*3), -r*sin(t*3)));
+    g = 2;
+    fluid.addGradient(Vec3f(16, 17, 16), g);
+    g = -2;
+    fluid.addGradient(Vec3f(16, 16, 16), g);
 
+    // run a fluid step:
+    fluid.update();
 
+    //		// VELOCITIES:
+    //		// add a bit of random noise:
+    //		fluid.velocities.adduniformS(rng, fluid.selfbackgroundnoise);
+    //		// assume new data is in front();
+    //		// smoothen the new data:
+    //		fluid.velocities.diffuse(fluid.viscocity, fluid.passes);
+    //		// zero velocities at boundaries:
+    //		fluid.boundary();
+    //		// (diffused data now in velocities.front())
+    //		// stabilize:
+    //		fluid.project();
+    ////			// prepare new gradient data:
+    ////
+    ///fluid.velocities.calculateGradientMagnitude(fluid.gradient.front());
+    ////
+    ////			// diffuse it (swaps):
+    ////			fluid.gradient.diffuse(0.5, fluid.passes/2);
+    ////			//fluid.gradient.back().zero();
+    ////
+    ////
+    ////			// subtract from current velocities:
+    ////
+    ///fluid.velocities.subtractGradientMagnitude(fluid.gradient.front());
+    //
+    //		// (projected data now in velocities.front())
+    //		// advect velocities:
+    //		fluid.velocities.advect(fluid.velocities.back(),
+    //fluid.selfadvection);
+    //		// zero velocities at boundaries:
+    //		fluid.boundary();
+    //		// (advected data now in velocities.front())
+    //		// stabilize again:
+    //		fluid.project();
+    //		// (projected data now in velocities.front())
+    //		fluid.velocities.scale(fluid.selfdecay);
+    //		// zero velocities at boundaries:
+    //		fluid.boundary();
 
-		// add some intensities:
-		float v = 4;
-		intensities.add(Vec3f(12, 20, 16), Vec3f(v, 0, 0).elems());
-		intensities.add(Vec3f(20, 12, 16), Vec3f(0, v, 0).elems());
-		intensities.add(Vec3f(16, 16, 12), Vec3f(0, 0, v).elems());
+    // diffuse the intensities:
+    intensities.diffuse();
 
-		float g;
+    // use the fluid to advect the intensities:
+    intensities.advect(fluid.velocities.front(), 3.);
 
+    // some decay
+    intensities.scale(0.999);
 
+    // update texture data:
+    intensityTex.submit(intensities.front());
+    velocityTex.submit(fluid.velocities.front());
 
-			g = 2;
-			fluid.addGradient(Vec3f(16, 17, 16), g);
-			g = -2;
-			fluid.addGradient(Vec3f(16, 16, 16), g);
+    // draw it:
+    gl.blending(true);
+    gl.blendModeAdd();
+    gl.lineWidth(0.5);
 
-		// run a fluid step:
-		fluid.update();
+    gl.polygonMode(gl.LINE);
 
+    shaderP.begin();
+    shaderP.uniform("velocityTex", 0);
+    shaderP.uniform("intensityTex", 1);
+    velocityTex.bind(0);
+    intensityTex.bind(1);
+    gl.draw(mesh);
+    intensityTex.unbind(1);
+    velocityTex.unbind(0);
+    shaderP.end();
 
-//		// VELOCITIES:
-//		// add a bit of random noise:
-//		fluid.velocities.adduniformS(rng, fluid.selfbackgroundnoise);
-//		// assume new data is in front();
-//		// smoothen the new data:
-//		fluid.velocities.diffuse(fluid.viscocity, fluid.passes);
-//		// zero velocities at boundaries:
-//		fluid.boundary();
-//		// (diffused data now in velocities.front())
-//		// stabilize:
-//		fluid.project();
-////			// prepare new gradient data:
-////			fluid.velocities.calculateGradientMagnitude(fluid.gradient.front());
-////
-////			// diffuse it (swaps):
-////			fluid.gradient.diffuse(0.5, fluid.passes/2);
-////			//fluid.gradient.back().zero();
-////
-////
-////			// subtract from current velocities:
-////			fluid.velocities.subtractGradientMagnitude(fluid.gradient.front());
-//
-//		// (projected data now in velocities.front())
-//		// advect velocities:
-//		fluid.velocities.advect(fluid.velocities.back(), fluid.selfadvection);
-//		// zero velocities at boundaries:
-//		fluid.boundary();
-//		// (advected data now in velocities.front())
-//		// stabilize again:
-//		fluid.project();
-//		// (projected data now in velocities.front())
-//		fluid.velocities.scale(fluid.selfdecay);
-//		// zero velocities at boundaries:
-//		fluid.boundary();
-
-
-		// diffuse the intensities:
-		intensities.diffuse();
-
-		// use the fluid to advect the intensities:
-		intensities.advect(fluid.velocities.front(), 3.);
-
-		// some decay
-		intensities.scale(0.999);
-
-		// update texture data:
-		intensityTex.submit(intensities.front());
-		velocityTex.submit(fluid.velocities.front());
-
-		// draw it:
-		gl.blending(true);
-		gl.blendModeAdd();
-		gl.lineWidth(0.5);
-
-		gl.polygonMode(gl.LINE);
-
-		shaderP.begin();
-		shaderP.uniform("velocityTex", 0);
-		shaderP.uniform("intensityTex", 1);
-		velocityTex.bind(0);
-		intensityTex.bind(1);
-		gl.draw(mesh);
-		intensityTex.unbind(1);
-		velocityTex.unbind(0);
-		shaderP.end();
-
-		return true;
-	}
+    return true;
+  }
 };
-
 
 MyWindow win;
 
-int main(){
+int main() {
+  win.append(*new StandardWindowKeyControls);
+  win.create(Window::Dim(640, 480));
 
-	win.append(*new StandardWindowKeyControls);
-	win.create(Window::Dim(640, 480));
-
-	MainLoop::start();
-	return 0;
+  MainLoop::start();
+  return 0;
 }
-

@@ -27,12 +27,12 @@
 
 #include <dirent.h>
 #include <cassert>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 //#include "allocore/al_Allocore.hpp"
+#include "allocore/graphics/al_Isosurface.hpp"
 #include "allocore/io/al_App.hpp"
 #include "allocore/types/al_Voxels.hpp"
-#include "allocore/graphics/al_Isosurface.hpp"
 // #include <conio.h>
 
 using namespace al;

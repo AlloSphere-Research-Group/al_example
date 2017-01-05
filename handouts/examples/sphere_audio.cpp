@@ -1,8 +1,8 @@
-#include "allocore/io/al_App.hpp"
-#include "Cuttlebone/Cuttlebone.hpp"
-#include "alloutil/al_Simulator.hpp"
-#include "alloutil/al_AlloSphereAudioSpatializer.hpp"
 #include <Gamma/SamplePlayer.h>
+#include "Cuttlebone/Cuttlebone.hpp"
+#include "allocore/io/al_App.hpp"
+#include "alloutil/al_AlloSphereAudioSpatializer.hpp"
+#include "alloutil/al_Simulator.hpp"
 
 using namespace al;
 using namespace std;

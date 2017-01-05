@@ -32,7 +32,7 @@ struct AlloApp : App {
   }
 
   virtual void onSound(AudioIOData& io) {
-    while (io()) { // for each sample... do..
+    while (io()) {  // for each sample... do..
       if (shouldClick) {
         shouldClick = false;
         io.out(0) = 1.0f;

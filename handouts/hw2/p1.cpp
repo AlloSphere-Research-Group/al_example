@@ -6,8 +6,8 @@
 // a point sprite, and on each frame adds random noise to the
 // position of each particle, which is reset on any keypress.
 
-#include "allocore/io/al_App.hpp"
 #include <cassert>  // gets you assert()
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

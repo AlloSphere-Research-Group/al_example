@@ -16,11 +16,7 @@ using namespace al;
 using namespace std;
 
 struct AlloApp : App {
-  AlloApp() {
-    cout << "Created AlloApp" << endl;
-  }
+  AlloApp() { cout << "Created AlloApp" << endl; }
 };
 
-int main() {
-  AlloApp app;
-}
+int main() { AlloApp app; }

@@ -12,8 +12,8 @@
 // formalize this. this app does not draw anything yet.
 //
 
-#include "allocore/io/al_App.hpp"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;

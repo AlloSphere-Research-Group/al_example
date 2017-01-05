@@ -7,14 +7,14 @@ struct MyApp : OmniApp {
   MyApp() {
     mesh.primitive(Graphics::TRIANGLES);
     addCube(mesh);
-//    mesh.color(Color(0, 0, 0));
-//    mesh.color(Color(0, 0, 1));
-//    mesh.color(Color(0, 1, 0));
-//    mesh.color(Color(0, 1, 1));
-//    mesh.color(Color(1, 0, 0));
-//    mesh.color(Color(1, 0, 1));
-//    mesh.color(Color(1, 1, 0));
-//    mesh.color(Color(1, 1, 1));
+    //    mesh.color(Color(0, 0, 0));
+    //    mesh.color(Color(0, 0, 1));
+    //    mesh.color(Color(0, 1, 0));
+    //    mesh.color(Color(0, 1, 1));
+    //    mesh.color(Color(1, 0, 0));
+    //    mesh.color(Color(1, 0, 1));
+    //    mesh.color(Color(1, 1, 0));
+    //    mesh.color(Color(1, 1, 1));
     mesh.generateNormals();
   }
   // omni_face

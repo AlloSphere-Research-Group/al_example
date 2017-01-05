@@ -5,9 +5,9 @@
 // Cuttlebone "App Simulator/Master and Renderer"
 //
 
+#include "Cuttlebone/Cuttlebone.hpp"
 #include "allocore/io/al_App.hpp"
 #include "allocore/math/al_Ray.hpp"
-#include "Cuttlebone/Cuttlebone.hpp"
 
 #include "common.hpp"
 

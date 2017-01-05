@@ -13,14 +13,14 @@
 // Step 07 - update the simulator to broadcast positions
 //
 
-#include "allocore/io/al_App.hpp"
-#include "Gamma/Oscillator.h"
 #include "Cuttlebone/Cuttlebone.hpp"
+#include "Gamma/Oscillator.h"
+#include "allocore/io/al_App.hpp"
 
 using namespace al;
 using namespace std;
 
-#include "06_common_with_positions.hpp" // XXX new definition of state
+#include "06_common_with_positions.hpp"  // XXX new definition of state
 
 // XXX when defining numeric consants with the C-preprocessor (like those
 // below), it's best to surround. the number with parenthesis, just in case
@@ -223,8 +223,7 @@ struct AlloApp : App {
 
     // broadcast Cuttlebone state and increment frame count
     //
-    for (int i = 0; i < N; i++)
-      state.position[i] = particle[i].position;
+    for (int i = 0; i < N; i++) state.position[i] = particle[i].position;
     maker.set(state);
     state.frame++;
   }
