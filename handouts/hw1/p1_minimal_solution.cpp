@@ -6,7 +6,7 @@
 //
 
 #include "Gamma/Oscillator.h"
-#include "allocore/io/al_App.hpp"
+#include "al/core.hpp"
 
 using namespace al;
 using namespace std;
@@ -14,7 +14,7 @@ using namespace std;
 #define N 20
 
 struct AlloApp : App {
-  Material material;
+  // Material material;
   Light light;
   Mesh m;
   gam::Sine<> sine[N];
@@ -24,7 +24,7 @@ struct AlloApp : App {
   bool shouldClick;
   bool shouldFlash[N];
 
-  AlloApp() {
+  void onCreate() {
     cout << "Created AlloApp" << endl;
     nav().pos(0, 0, 10);
     light.pos(0, 0, 10);
@@ -38,9 +38,6 @@ struct AlloApp : App {
       shouldClick = false;
       shouldFlash[i] = false;
     }
-
-    initWindow();
-    initAudio();
   }
 
   virtual void onAnimate(double dt) {
@@ -63,9 +60,14 @@ struct AlloApp : App {
     }
   }
 
-  virtual void onDraw(Graphics& g, const Viewpoint& v) {
-    material();
-    light();
+  virtual void onDraw(Graphics& g) {
+    g.clear(0);
+    g.lighting(true);
+    g.depthTesting(true);
+
+    g.light(light);
+    // g.material(material);
+
     for (int i = 0; i < N; ++i) {
       g.pushMatrix();
       if (shouldFlash[i]) {
@@ -99,7 +101,7 @@ struct AlloApp : App {
     }
   }
 
-  virtual void onKeyDown(const ViewpointWindow&, const Keyboard& k) {
+  virtual void onKeyDown(const Keyboard& k) {
     if (k.key() == ' ') {
       cout << "Spacebar pressed" << endl;
     }
@@ -108,6 +110,7 @@ struct AlloApp : App {
 
 int main(int argc, char* argv[]) {
   AlloApp app;
+  app.initAudio();
   app.start();
   return 0;
 }
